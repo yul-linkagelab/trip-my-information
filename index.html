@@ -7,6 +7,7 @@
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
+
     body {
       font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
       background: #f0f4f8;
@@ -335,6 +336,7 @@
 </head>
 <body>
 
+
 <header>
   <div class="toolbar">
     <button class="dark-toggle" onclick="changeFontSize(-1)" id="btnSmall" aria-label="글자 크기 줄이기">A−</button>
@@ -368,12 +370,24 @@ fetch('data.json')
   .then(data => { PEOPLE = data; });
 
 // Apps Script 백그라운드 로드 (실시간 데이터로 교체)
-
 function refreshFromSheet() {
-  fetch('https://script.google.com/macros/s/AKfycbz9kD6pl9ARQAoq07cSxARhPhvF73iy-Rj9nFlvXxO5VkJEkP-IFmPg6DZp6rvGZuM/exec')
+  fetch('https://script.google.com/macros/s/AKfycbxwK3Dl_QHqAenN803H9uJBi7OTirrt0BdYpZA2Ja5YoXdTSripmKzTLTdi3ImiTQ/exec')
     .then(r => r.json())
     .then(data => {
-      if (data.people && data.people.length) PEOPLE = data.people;
+      if (data.people && data.people.length) {
+        PEOPLE = data.people;
+        // 최신 데이터 로드 후 현재 검색 결과 자동 갱신
+        const q = input.value.trim().toLowerCase();
+        if (q) {
+          const matches = getMatches(q);
+          // 카드가 열려 있으면 최신 데이터로 다시 렌더링
+          if (resultEl.querySelector('.card')) {
+            const currentLdap = resultEl.querySelector('.card-header-text p')?.textContent;
+            const updated = PEOPLE.find(p => p.ldap === currentLdap);
+            if (updated) { showCard(updated); applyFontSize(); }
+          }
+        }
+      }
     })
     .catch(() => {});
 }
