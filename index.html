@@ -7,7 +7,6 @@
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
-
     body {
       font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
       background: #f0f4f8;
@@ -336,7 +335,6 @@
 </head>
 <body>
 
-
 <header>
   <div class="toolbar">
     <button class="dark-toggle" onclick="changeFontSize(-1)" id="btnSmall" aria-label="글자 크기 줄이기">A−</button>
@@ -370,18 +368,12 @@ fetch('data.json')
   .then(data => { PEOPLE = data; });
 
 // Apps Script 백그라운드 로드 (실시간 데이터로 교체)
+
 function refreshFromSheet() {
-  fetch('https://script.google.com/macros/s/AKfycbxwK3Dl_QHqAenN803H9uJBi7OTirrt0BdYpZA2Ja5YoXdTSripmKzTLTdi3ImiTQ/exec')
+  fetch('https://script.google.com/macros/s/AKfycbz9kD6pl9ARQAoq07cSxARhPhvF73iy-Rj9nFlvXxO5VkJEkP-IFmPg6DZp6rvGZuM/exec')
     .then(r => r.json())
     .then(data => {
-      if (data.people && data.people.length) {
-        PEOPLE = data.people;
-        // 카드가 열려 있으면 최신 데이터로 다시 렌더링
-        if (currentLdap) {
-          const updated = PEOPLE.find(p => p.ldap === currentLdap);
-          if (updated) { showCard(updated); applyFontSize(); }
-        }
-      }
+      if (data.people && data.people.length) PEOPLE = data.people;
     })
     .catch(() => {});
 }
@@ -395,8 +387,6 @@ const suggestionsEl = document.getElementById('suggestions');
 const resultEl = document.getElementById('result');
 const hintEl = document.getElementById('hint');
 
-let currentLdap = null; // 현재 카드에 표시 중인 사람의 ldap
-
 function getMatches(q) {
   return PEOPLE.filter(p =>
     p.nickname.toLowerCase().includes(q) ||
@@ -406,7 +396,6 @@ function getMatches(q) {
 }
 
 function selectPerson(p) {
-  currentLdap = p.ldap;
   input.value = p.nickname;
   suggestionsEl.style.display = 'none';
   suggestionsEl.innerHTML = '';
