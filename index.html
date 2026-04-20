@@ -368,10 +368,15 @@ fetch('data.json')
   .then(data => { PEOPLE = data; });
 
 // Apps Script 백그라운드 로드 (실시간 데이터로 교체)
-fetch('https://script.google.com/macros/s/AKfycbxwK3Dl_QHqAenN803H9uJBi7OTirrt0BdYpZA2Ja5YoXdTSripmKzTLTdi3ImiTQ/exec')
-  .then(r => r.json())
-  .then(data => { if (data.length) PEOPLE = data; })
-  .catch(() => {});
+function refreshFromSheet() {
+  fetch('https://script.google.com/macros/s/AKfycbxwK3Dl_QHqAenN803H9uJBi7OTirrt0BdYpZA2Ja5YoXdTSripmKzTLTdi3ImiTQ/exec')
+    .then(r => r.json())
+    .then(data => { if (data.length) PEOPLE = data; })
+    .catch(() => {});
+}
+
+refreshFromSheet();
+setInterval(refreshFromSheet, 60 * 1000); // 1분마다 자동 갱신
 
 // ── 검색 로직 ────────────────────────────────────────────
 const input = document.getElementById('searchInput');
