@@ -359,30 +359,42 @@
 <footer>링키지랩</footer>
 
 <script>
-// ── 데이터 로드 ──────────────────────────────────────────
+// ── 1. 데이터 로드 및 관리 로직 ──────────────────────────────
 let PEOPLE = [];
 const input = document.getElementById('searchInput');
 const suggestionsEl = document.getElementById('suggestions');
 const resultEl = document.getElementById('result');
 const hintEl = document.getElementById('hint');
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbz9kD6pl9ARQAoq07cSxARhPhvF73iy-Rj9nFlvXxO5VkJEkP-IFmPg6DZp6rvGZuM/exec';
 
-// 1. 초기 상태: 로딩 중 (검색창 비활성화)
-input.disabled = true;
-input.placeholder = "최신 데이터를 불러오는 중입니다... ⏳";
+// [기능 1] 로컬 스토리지 캐시 확인 (0초 로딩 구현)
+const cachedData = localStorage.getItem('missionTripData');
+if (cachedData) {
+  PEOPLE = JSON.parse(cachedData);
+  input.disabled = false;
+  input.placeholder = "예) 헤이든, david.0726";
+} else {
+  // 처음 접속하여 캐시가 없는 경우에만 로딩 표시
+  input.disabled = true;
+  input.placeholder = "최신 데이터를 불러오는 중입니다... ⏳";
+}
 
+// 실시간 데이터 패치 함수
 function refreshFromSheet() {
-  // data.json을 삭제하고 오직 실시간 GAS 데이터만 의존합니다.
-  fetch('https://script.google.com/macros/s/AKfycbz9kD6pl9ARQAoq07cSxARhPhvF73iy-Rj9nFlvXxO5VkJEkP-IFmPg6DZp6rvGZuM/exec')
+  fetch(GAS_URL)
     .then(r => r.json())
     .then(data => {
       if (data.people && data.people.length) {
         PEOPLE = data.people;
         
-        // 2. 데이터 로드 완료: 검색창 활성화
+        // 최신 데이터 로컬 스토리지에 저장
+        localStorage.setItem('missionTripData', JSON.stringify(PEOPLE));
+        
+        // 로딩 완료 후 검색창 활성화
         input.disabled = false;
         input.placeholder = "예) 헤이든, david.0726";
         
-        // 3. 현재 화면에 카드가 열려있다면, 갱신된 최신 데이터로 카드 즉시 새로고침
+        // [추가 기능] 현재 보고 있는 카드가 있다면 실시간으로 데이터 업데이트
         const currentLdap = document.querySelector('.card-header-text p')?.innerText;
         if (currentLdap) {
           const updatedPerson = PEOPLE.find(p => p.ldap === currentLdap);
@@ -391,18 +403,30 @@ function refreshFromSheet() {
             applyFontSize();
           }
         }
+        console.log("데이터 최신화 완료:", new Date().toLocaleTimeString());
       }
     })
-    .catch(() => {
-      input.placeholder = "데이터 로딩 실패. 페이지를 새로고침 해주세요.";
+    .catch(err => {
+      console.error("데이터 로드 실패:", err);
+      if (!cachedData) input.placeholder = "데이터 로딩 실패. 다시 시도해주세요.";
     });
 }
 
-// 앱 실행 시 실시간 데이터 호출
+// 초기 실행
 refreshFromSheet();
-setInterval(refreshFromSheet, 60 * 1000); // 1분마다 자동 갱신
 
-// ── 검색 로직 ────────────────────────────────────────────
+// [기능 2] 1분마다 자동 백그라운드 갱신
+setInterval(refreshFromSheet, 60 * 1000);
+
+// [기능 3] 사용자가 화면을 다시 보게 된 순간(탭 전환/화면 켬) 즉시 갱신
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible') {
+    refreshFromSheet();
+  }
+});
+
+
+// ── 2. 검색 및 제어 로직 (기존 기능 유지) ───────────────────────
 
 function getMatches(q) {
   return PEOPLE.filter(p =>
@@ -461,20 +485,19 @@ input.addEventListener('keydown', e => {
   }
 });
 
-// 외부 클릭 시 자동완성 닫기
 document.addEventListener('click', e => {
   if (!e.target.closest('.search-box') && !e.target.closest('#suggestions')) {
     suggestionsEl.style.display = 'none';
   }
 });
 
-// ── 카드 렌더링 ──────────────────────────────────────────
+
+// ── 3. UI 렌더링 함수 ────────────────────────────────────
+
 function val(v) { return v && v !== 'None' && v !== 'nan' ? v : '—'; }
 
 function showCard(p) {
   const initial = p.nickname ? p.nickname[0] : (p.name ? p.name[0] : '?');
-
-  // 활성화되어 있던 탭 상태 기억 (데이터 갱신 시 탭 유지)
   const activeTabId = document.querySelector('.day-tab.active')?.getAttribute('aria-controls') || 'day1';
 
   resultEl.innerHTML = `
@@ -489,7 +512,6 @@ function showCard(p) {
 
       <div class="card-body">
       <div class="section-title" aria-hidden="true">기본 정보</div>
-      <h3 class="sr-only">기본 정보</h3>
       <div class="info-grid">
         <div class="info-item">
           <div class="info-label">🚌 버스</div>
@@ -509,86 +531,47 @@ function showCard(p) {
         </div>
       </div>
 
-      <div class="day-tabs" role="tablist" aria-label="일차별 정보">
+      <div class="day-tabs" role="tablist">
         <button class="day-tab ${activeTabId === 'day1' ? 'active' : ''}" role="tab" aria-selected="${activeTabId === 'day1'}" aria-controls="day1" onclick="switchDay(this, 'day1')">1일차</button>
         <button class="day-tab ${activeTabId === 'day2' ? 'active' : ''}" role="tab" aria-selected="${activeTabId === 'day2'}" aria-controls="day2" onclick="switchDay(this, 'day2')">2일차</button>
         <button class="day-tab ${activeTabId === 'day3' ? 'active' : ''}" role="tab" aria-selected="${activeTabId === 'day3'}" aria-controls="day3" onclick="switchDay(this, 'day3')">3일차</button>
       </div>
 
-      <div id="day1" class="day-panel ${activeTabId === 'day1' ? 'active' : ''}" role="tabpanel" aria-label="1일차">
-        <div class="section-title"><span aria-hidden="true">✈️</span> 김포 → 제주</div>
+      <div id="day1" class="day-panel ${activeTabId === 'day1' ? 'active' : ''}" role="tabpanel">
+        <div class="section-title">✈️ 김포 → 제주</div>
         <div class="info-grid">
-          <div class="info-item full">
-            <div class="info-label">⏰ 김포공항 집결</div>
-            <div class="info-value">${val(p.assembly_time)}</div>
-          </div>
-          <div class="info-item">
-            <div class="info-label">항공사</div>
-            <div class="info-value">${val(p.dep_airline)}</div>
-          </div>
-          <div class="info-item">
-            <div class="info-label">편명</div>
-            <div class="info-value">${val(p.dep_flight)}</div>
-          </div>
-          <div class="info-item">
-            <div class="info-label">🚪 탑승구</div>
-            <div class="info-value">${val(p.dep_gate)}</div>
-          </div>
-          <div class="info-item">
-            <div class="info-label">⏱ 출발 시간</div>
-            <div class="info-value">${val(p.dep_time)}</div>
-          </div>
+          <div class="info-item full"><div class="info-label">⏰ 김포공항 집결</div><div class="info-value">${val(p.assembly_time)}</div></div>
+          <div class="info-item"><div class="info-label">항공사</div><div class="info-value">${val(p.dep_airline)}</div></div>
+          <div class="info-item"><div class="info-label">편명</div><div class="info-value">${val(p.dep_flight)}</div></div>
+          <div class="info-item"><div class="info-label">🚪 탑승구</div><div class="info-value">${val(p.dep_gate)}</div></div>
+          <div class="info-item"><div class="info-label">⏱ 출발 시간</div><div class="info-value">${val(p.dep_time)}</div></div>
         </div>
       </div>
 
-      <div id="day2" class="day-panel ${activeTabId === 'day2' ? 'active' : ''}" role="tabpanel" aria-label="2일차">
-        <div class="section-title"><span aria-hidden="true">🍽️</span> 더클리프</div>
+      <div id="day2" class="day-panel ${activeTabId === 'day2' ? 'active' : ''}" role="tabpanel">
+        <div class="section-title">🍽️ 더클리프</div>
         <div class="info-grid">
-          <div class="info-item">
-            <div class="info-label">음료</div>
-            <div class="info-value">${val(p.cliff_drink)}</div>
-          </div>
-          <div class="info-item">
-            <div class="info-label">푸드박스</div>
-            <div class="info-value">${val(p.cliff_food)}</div>
-          </div>
+          <div class="info-item"><div class="info-label">음료</div><div class="info-value">${val(p.cliff_drink)}</div></div>
+          <div class="info-item"><div class="info-label">푸드박스</div><div class="info-value">${val(p.cliff_food)}</div></div>
         </div>
       </div>
 
-      <div id="day3" class="day-panel ${activeTabId === 'day3' ? 'active' : ''}" role="tabpanel" aria-label="3일차">
-        <div class="section-title"><span aria-hidden="true">🌿</span> 치유의숲</div>
+      <div id="day3" class="day-panel ${activeTabId === 'day3' ? 'active' : ''}" role="tabpanel">
+        <div class="section-title">🌿 치유의숲</div>
         <div class="info-grid">
-          <div class="info-item">
-            <div class="info-label">프로그램</div>
-            <div class="info-value">${val(p.forest_program)}</div>
-          </div>
-          <div class="info-item">
-            <div class="info-label">프로그램 조장</div>
-            <div class="info-value">${val(p.forest_group)}</div>
-          </div>
+          <div class="info-item"><div class="info-label">프로그램</div><div class="info-value">${val(p.forest_program)}</div></div>
+          <div class="info-item"><div class="info-label">프로그램 조장</div><div class="info-value">${val(p.forest_group)}</div></div>
         </div>
-        <div class="section-title"><span aria-hidden="true">✈️</span> 제주 → 김포</div>
+        <div class="section-title">✈️ 제주 → 김포</div>
         <div class="info-grid">
-          <div class="info-item">
-            <div class="info-label">항공사</div>
-            <div class="info-value">${val(p.ret_airline)}</div>
-          </div>
-          <div class="info-item">
-            <div class="info-label">편명</div>
-            <div class="info-value">${val(p.ret_flight)}</div>
-          </div>
-          <div class="info-item">
-            <div class="info-label">🚪 탑승구</div>
-            <div class="info-value">${val(p.ret_gate)}</div>
-          </div>
-          <div class="info-item">
-            <div class="info-label">⏱ 출발 시간</div>
-            <div class="info-value">${val(p.ret_time)}</div>
-          </div>
+          <div class="info-item"><div class="info-label">항공사</div><div class="info-value">${val(p.ret_airline)}</div></div>
+          <div class="info-item"><div class="info-label">편명</div><div class="info-value">${val(p.ret_flight)}</div></div>
+          <div class="info-item"><div class="info-label">🚪 탑승구</div><div class="info-value">${val(p.ret_gate)}</div></div>
+          <div class="info-item"><div class="info-label">⏱ 출발 시간</div><div class="info-value">${val(p.ret_time)}</div></div>
         </div>
       </div>
-
-      </div></div>
+      </div>
+    </div>
   `;
 }
 
@@ -609,7 +592,6 @@ function toggleDark() {
   const isDark = document.body.classList.toggle('dark');
   const btn = document.getElementById('darkBtn');
   btn.textContent = isDark ? '☀️ 라이트' : '🌙 다크';
-  btn.setAttribute('aria-label', isDark ? '라이트모드로 전환' : '다크모드로 전환');
   localStorage.setItem('darkMode', isDark);
 }
 
@@ -628,6 +610,10 @@ function switchDay(btn, panelId) {
   btn.setAttribute('aria-selected', 'true');
   btn.closest('.card').querySelector('#' + panelId).classList.add('active');
 }
+
+// 폰트 크기 초기화 적용
+applyFontSize();
+
 </script>
 </body>
 </html>
