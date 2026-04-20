@@ -376,16 +376,10 @@ function refreshFromSheet() {
     .then(data => {
       if (data.people && data.people.length) {
         PEOPLE = data.people;
-        // 최신 데이터 로드 후 현재 검색 결과 자동 갱신
-        const q = input.value.trim().toLowerCase();
-        if (q) {
-          const matches = getMatches(q);
-          // 카드가 열려 있으면 최신 데이터로 다시 렌더링
-          if (resultEl.querySelector('.card')) {
-            const currentLdap = resultEl.querySelector('.card-header-text p')?.textContent;
-            const updated = PEOPLE.find(p => p.ldap === currentLdap);
-            if (updated) { showCard(updated); applyFontSize(); }
-          }
+        // 카드가 열려 있으면 최신 데이터로 다시 렌더링
+        if (currentLdap) {
+          const updated = PEOPLE.find(p => p.ldap === currentLdap);
+          if (updated) { showCard(updated); applyFontSize(); }
         }
       }
     })
@@ -401,6 +395,8 @@ const suggestionsEl = document.getElementById('suggestions');
 const resultEl = document.getElementById('result');
 const hintEl = document.getElementById('hint');
 
+let currentLdap = null; // 현재 카드에 표시 중인 사람의 ldap
+
 function getMatches(q) {
   return PEOPLE.filter(p =>
     p.nickname.toLowerCase().includes(q) ||
@@ -410,6 +406,7 @@ function getMatches(q) {
 }
 
 function selectPerson(p) {
+  currentLdap = p.ldap;
   input.value = p.nickname;
   suggestionsEl.style.display = 'none';
   suggestionsEl.innerHTML = '';
