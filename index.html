@@ -361,42 +361,59 @@
 <script>
 // ── 데이터 로드 ──────────────────────────────────────────
 let PEOPLE = [];
-
-// data.json 즉시 로드 (빠른 초기 검색)
-fetch('data.json')
-  .then(r => r.json())
-  .then(data => { PEOPLE = data; });
-
-// Apps Script 백그라운드 로드 (실시간 데이터로 교체)
-
-function refreshFromSheet() {
-  fetch('https://script.google.com/macros/s/AKfycbz9kD6pl9ARQAoq07cSxARhPhvF73iy-Rj9nFlvXxO5VkJEkP-IFmPg6DZp6rvGZuM/exec')
-    .then(r => r.json())
-    .then(data => {
-      if (data.people && data.people.length) PEOPLE = data.people;
-    })
-    .catch(() => {});
-}
-
-refreshFromSheet();
-setInterval(refreshFromSheet, 60 * 1000); // 1분마다 자동 갱신
-
-// ── 검색 로직 ────────────────────────────────────────────
 const input = document.getElementById('searchInput');
 const suggestionsEl = document.getElementById('suggestions');
 const resultEl = document.getElementById('result');
 const hintEl = document.getElementById('hint');
 
+// 1. 초기 상태: 로딩 중 (검색창 비활성화)
+input.disabled = true;
+input.placeholder = "최신 데이터를 불러오는 중입니다... ⏳";
+
+function refreshFromSheet() {
+  // data.json을 삭제하고 오직 실시간 GAS 데이터만 의존합니다.
+  fetch('https://script.google.com/macros/s/AKfycbz9kD6pl9ARQAoq07cSxARhPhvF73iy-Rj9nFlvXxO5VkJEkP-IFmPg6DZp6rvGZuM/exec')
+    .then(r => r.json())
+    .then(data => {
+      if (data.people && data.people.length) {
+        PEOPLE = data.people;
+        
+        // 2. 데이터 로드 완료: 검색창 활성화
+        input.disabled = false;
+        input.placeholder = "예) 헤이든, david.0726";
+        
+        // 3. 현재 화면에 카드가 열려있다면, 갱신된 최신 데이터로 카드 즉시 새로고침
+        const currentLdap = document.querySelector('.card-header-text p')?.innerText;
+        if (currentLdap) {
+          const updatedPerson = PEOPLE.find(p => p.ldap === currentLdap);
+          if (updatedPerson) {
+            showCard(updatedPerson);
+            applyFontSize();
+          }
+        }
+      }
+    })
+    .catch(() => {
+      input.placeholder = "데이터 로딩 실패. 페이지를 새로고침 해주세요.";
+    });
+}
+
+// 앱 실행 시 실시간 데이터 호출
+refreshFromSheet();
+setInterval(refreshFromSheet, 60 * 1000); // 1분마다 자동 갱신
+
+// ── 검색 로직 ────────────────────────────────────────────
+
 function getMatches(q) {
   return PEOPLE.filter(p =>
-    p.nickname.toLowerCase().includes(q) ||
-    p.name.toLowerCase().includes(q) ||
-    p.ldap.toLowerCase().includes(q)
+    (p.nickname && p.nickname.toLowerCase().includes(q)) ||
+    (p.name && p.name.toLowerCase().includes(q)) ||
+    (p.ldap && p.ldap.toLowerCase().includes(q))
   );
 }
 
 function selectPerson(p) {
-  input.value = p.nickname;
+  input.value = p.nickname || p.name || '';
   suggestionsEl.style.display = 'none';
   suggestionsEl.innerHTML = '';
   showCard(p);
@@ -455,7 +472,10 @@ document.addEventListener('click', e => {
 function val(v) { return v && v !== 'None' && v !== 'nan' ? v : '—'; }
 
 function showCard(p) {
-  const initial = p.nickname ? p.nickname[0] : '?';
+  const initial = p.nickname ? p.nickname[0] : (p.name ? p.name[0] : '?');
+
+  // 활성화되어 있던 탭 상태 기억 (데이터 갱신 시 탭 유지)
+  const activeTabId = document.querySelector('.day-tab.active')?.getAttribute('aria-controls') || 'day1';
 
   resultEl.innerHTML = `
     <div class="card" tabindex="-1">
@@ -490,12 +510,12 @@ function showCard(p) {
       </div>
 
       <div class="day-tabs" role="tablist" aria-label="일차별 정보">
-        <button class="day-tab active" role="tab" aria-selected="true" aria-controls="day1" onclick="switchDay(this, 'day1')">1일차</button>
-        <button class="day-tab" role="tab" aria-selected="false" aria-controls="day2" onclick="switchDay(this, 'day2')">2일차</button>
-        <button class="day-tab" role="tab" aria-selected="false" aria-controls="day3" onclick="switchDay(this, 'day3')">3일차</button>
+        <button class="day-tab ${activeTabId === 'day1' ? 'active' : ''}" role="tab" aria-selected="${activeTabId === 'day1'}" aria-controls="day1" onclick="switchDay(this, 'day1')">1일차</button>
+        <button class="day-tab ${activeTabId === 'day2' ? 'active' : ''}" role="tab" aria-selected="${activeTabId === 'day2'}" aria-controls="day2" onclick="switchDay(this, 'day2')">2일차</button>
+        <button class="day-tab ${activeTabId === 'day3' ? 'active' : ''}" role="tab" aria-selected="${activeTabId === 'day3'}" aria-controls="day3" onclick="switchDay(this, 'day3')">3일차</button>
       </div>
 
-      <div id="day1" class="day-panel active" role="tabpanel" aria-label="1일차">
+      <div id="day1" class="day-panel ${activeTabId === 'day1' ? 'active' : ''}" role="tabpanel" aria-label="1일차">
         <div class="section-title"><span aria-hidden="true">✈️</span> 김포 → 제주</div>
         <div class="info-grid">
           <div class="info-item full">
@@ -521,7 +541,7 @@ function showCard(p) {
         </div>
       </div>
 
-      <div id="day2" class="day-panel" role="tabpanel" aria-label="2일차">
+      <div id="day2" class="day-panel ${activeTabId === 'day2' ? 'active' : ''}" role="tabpanel" aria-label="2일차">
         <div class="section-title"><span aria-hidden="true">🍽️</span> 더클리프</div>
         <div class="info-grid">
           <div class="info-item">
@@ -535,7 +555,7 @@ function showCard(p) {
         </div>
       </div>
 
-      <div id="day3" class="day-panel" role="tabpanel" aria-label="3일차">
+      <div id="day3" class="day-panel ${activeTabId === 'day3' ? 'active' : ''}" role="tabpanel" aria-label="3일차">
         <div class="section-title"><span aria-hidden="true">🌿</span> 치유의숲</div>
         <div class="info-grid">
           <div class="info-item">
@@ -568,8 +588,7 @@ function showCard(p) {
         </div>
       </div>
 
-      </div><!-- /.card-body -->
-    </div>
+      </div></div>
   `;
 }
 
@@ -585,8 +604,6 @@ function changeFontSize(dir) {
   localStorage.setItem('fontIdx', fontIdx);
   applyFontSize();
 }
-
-applyFontSize();
 
 function toggleDark() {
   const isDark = document.body.classList.toggle('dark');
