@@ -7,6 +7,26 @@
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
+    #notice-banner {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: #fef3c7;
+      border-bottom: 2px solid #f59e0b;
+      padding: 10px 16px;
+      text-align: center;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #92400e;
+    }
+
+    body.dark #notice-banner {
+      background: #3d2a00;
+      border-color: #b45309;
+      color: #fde68a;
+    }
+
     body {
       font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
       background: #f0f4f8;
@@ -335,6 +355,10 @@
 </head>
 <body>
 
+<div id="notice-banner" role="alert" aria-live="polite">
+  📢 <span id="notice-text"></span>
+</div>
+
 <header>
   <div class="toolbar">
     <button class="dark-toggle" onclick="changeFontSize(-1)" id="btnSmall" aria-label="글자 크기 줄이기">A−</button>
@@ -368,10 +392,26 @@ fetch('data.json')
   .then(data => { PEOPLE = data; });
 
 // Apps Script 백그라운드 로드 (실시간 데이터로 교체)
+function showNotice(text) {
+  const banner = document.getElementById('notice-banner');
+  const noticeText = document.getElementById('notice-text');
+  if (text && text.trim()) {
+    noticeText.textContent = text.trim();
+    banner.style.display = 'block';
+    document.body.style.paddingTop = (banner.offsetHeight + 12) + 'px';
+  } else {
+    banner.style.display = 'none';
+    document.body.style.paddingTop = '';
+  }
+}
+
 function refreshFromSheet() {
   fetch('https://script.google.com/macros/s/AKfycbxwK3Dl_QHqAenN803H9uJBi7OTirrt0BdYpZA2Ja5YoXdTSripmKzTLTdi3ImiTQ/exec')
     .then(r => r.json())
-    .then(data => { if (data.length) PEOPLE = data; })
+    .then(data => {
+      if (data.people && data.people.length) PEOPLE = data.people;
+      showNotice(data.notice);
+    })
     .catch(() => {});
 }
 
