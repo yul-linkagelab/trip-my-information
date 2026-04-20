@@ -370,7 +370,7 @@ fetch('data.json')
 // Apps Script 백그라운드 로드 (실시간 데이터로 교체)
 
 function refreshFromSheet() {
-  fetch('https://script.google.com/macros/s/AKfycbxwK3Dl_QHqAenN803H9uJBi7OTirrt0BdYpZA2Ja5YoXdTSripmKzTLTdi3ImiTQ/exec')
+  fetch('https://script.google.com/macros/s/AKfycbz9kD6pl9ARQAoq07cSxARhPhvF73iy-Rj9nFlvXxO5VkJEkP-IFmPg6DZp6rvGZuM/exec')
     .then(r => r.json())
     .then(data => {
       if (data.people && data.people.length) PEOPLE = data.people;
