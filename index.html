@@ -362,13 +362,16 @@
 // ── 데이터 로드 ──────────────────────────────────────────
 let PEOPLE = [];
 
+// data.json 즉시 로드 (빠른 초기 검색)
+fetch('data.json')
+  .then(r => r.json())
+  .then(data => { PEOPLE = data; });
+
+// Apps Script 백그라운드 로드 (실시간 데이터로 교체)
 fetch('https://script.google.com/macros/s/AKfycbxwK3Dl_QHqAenN803H9uJBi7OTirrt0BdYpZA2Ja5YoXdTSripmKzTLTdi3ImiTQ/exec')
   .then(r => r.json())
-  .then(data => { PEOPLE = data; })
-  .catch(() => {
-    document.getElementById('result').innerHTML =
-      '<div class="no-result">데이터를 불러오지 못했습니다.<br>관리자에게 문의하세요.</div>';
-  });
+  .then(data => { if (data.length) PEOPLE = data; })
+  .catch(() => {});
 
 // ── 검색 로직 ────────────────────────────────────────────
 const input = document.getElementById('searchInput');
