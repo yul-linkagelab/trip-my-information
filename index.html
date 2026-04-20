@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2026 제주 미션트립 — 내 정보 조회</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+      background: #f0f4f8;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 12px 16px 64px;
+    }
+
+    header {
+      width: 100%;
+      max-width: 480px;
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .toolbar {
+      display: flex;
+      justify-content: flex-end;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+
+    header h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #1a3a5c;
+      margin-bottom: 6px;
+    }
+
+    header p {
+      font-size: 0.9rem;
+      color: #6b7a8d;
+    }
+
+    .search-box {
+      width: 100%;
+      max-width: 480px;
+      position: relative;
+      margin-bottom: 24px;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 14px 48px 14px 18px;
+      font-size: 1rem;
+      border: 2px solid #d1dbe8;
+      border-radius: 12px;
+      outline: none;
+      background: #fff;
+      transition: border-color 0.2s;
+      color: #1a3a5c;
+    }
+
+    .search-box input:focus {
+      border-color: #3b82f6;
+    }
+
+    .search-box input::placeholder {
+      color: #aab4c0;
+    }
+
+    .search-box .icon {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.2rem;
+      pointer-events: none;
+    }
+
+    #suggestions {
+      width: 100%;
+      max-width: 480px;
+      background: #fff;
+      border: 1.5px solid #d1dbe8;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 8px;
+      display: none;
+    }
+
+    .suggestion-item {
+      padding: 12px 18px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      color: #1a3a5c;
+      border-bottom: 1px solid #f0f4f8;
+      transition: background 0.15s;
+    }
+
+    .suggestion-item:last-child { border-bottom: none; }
+    .suggestion-item:hover { background: #eef3fa; }
+
+    .suggestion-item .sub {
+      font-size: 0.78rem;
+      color: #8fa0b4;
+      margin-top: 2px;
+    }
+
+    #result {
+      width: 100%;
+      max-width: 480px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 4px 20px rgba(26,58,92,0.08);
+      animation: fadeIn 0.25s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1.5px solid #eef3fa;
+    }
+
+    .avatar {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+      color: #fff;
+      font-size: 1.4rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .card-header-text h2 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #1a3a5c;
+    }
+
+    .card-header-text p {
+      font-size: 0.82rem;
+      color: #8fa0b4;
+      margin-top: 2px;
+    }
+
+    /* 헤더 아래 콘텐츠 — A+/A− 버튼으로 조절 */
+    .card-body {
+      font-size: 1.2rem;
+    }
+
+    .section-title {
+      font-size: 1em;
+      font-weight: 700;
+      color: #3b82f6;
+      margin: 16px 0 8px;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .info-item {
+      background: #f7fafd;
+      border-radius: 10px;
+      padding: 12px 14px;
+    }
+
+    .info-item.full {
+      grid-column: 1 / -1;
+    }
+
+    .info-label {
+      font-size: 1em;
+      color: #8fa0b4;
+      margin-bottom: 4px;
+    }
+
+    .info-value {
+      font-size: 1em;
+      font-weight: 600;
+      color: #1a3a5c;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+
+    .badge-blue  { background: #dbeafe; color: #1d4ed8; }
+    .badge-green { background: #d1fae5; color: #065f46; }
+
+    .day-tabs {
+      display: flex;
+      gap: 8px;
+      margin: 16px 0 12px;
+    }
+
+    .day-tab {
+      flex: 1;
+      padding: 9px 0;
+      border: 2px solid #d1dbe8;
+      border-radius: 10px;
+      background: #fff;
+      color: #8fa0b4;
+      font-size: 1em;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s;
+      font-family: inherit;
+    }
+
+    .day-tab:hover { border-color: #3b82f6; color: #3b82f6; }
+
+    .day-tab.active {
+      background: #3b82f6;
+      border-color: #3b82f6;
+      color: #fff;
+    }
+
+    .day-panel { display: none; }
+    .day-panel.active { display: block; }
+
+    .sr-only {
+      position: absolute; width: 1px; height: 1px;
+      padding: 0; margin: -1px; overflow: hidden;
+      clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+    }
+
+    .no-result {
+      text-align: center;
+      color: #8fa0b4;
+      padding: 32px 0;
+      font-size: 0.95rem;
+    }
+
+    #hint {
+      text-align: center;
+      color: #aab4c0;
+      font-size: 1.105rem;
+      margin-top: 8px;
+    }
+
+    footer {
+      margin-top: 48px;
+      font-size: 0.975rem;
+      color: #c0cdd8;
+      text-align: center;
+    }
+
+    .dark-toggle {
+      background: #fff;
+      border: 1.5px solid #d1dbe8;
+      border-radius: 20px;
+      padding: 6px 14px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      color: #1a3a5c;
+      font-family: inherit;
+      font-weight: 600;
+      transition: all 0.15s;
+    }
+    .dark-toggle:hover { border-color: #3b82f6; }
+
+    /* ── 다크모드 ── */
+    body.dark { background: #0f1923; }
+    body.dark header h1 { color: #e2eaf4; }
+    body.dark header p  { color: #6b7a8d; }
+    body.dark .search-box input {
+      background: #1a2636;
+      border-color: #2a3a4e;
+      color: #e2eaf4;
+    }
+    body.dark .search-box input::placeholder { color: #7a95ad; }
+    body.dark #suggestions {
+      background: #1a2636;
+      border-color: #2a3a4e;
+    }
+    body.dark .suggestion-item { color: #e2eaf4; border-color: #2a3a4e; }
+    body.dark .suggestion-item:hover { background: #1f3044; }
+    body.dark .suggestion-item .sub { color: #4a6278; }
+    body.dark .card {
+      background: #1a2636;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+    body.dark .card-header { border-color: #2a3a4e; }
+    body.dark .card-header-text h2 { color: #e2eaf4; }
+    body.dark .card-header-text p  { color: #94afc8; }
+    body.dark .info-item { background: #111e2b; }
+    body.dark .info-label { color: #94afc8; }
+    body.dark .info-value { color: #e2eaf4; }
+    body.dark .section-title { color: #4d9cf0; }
+    body.dark .day-tab {
+      background: #1a2636;
+      border-color: #4a6278;
+      color: #94afc8;
+    }
+    body.dark .day-tab:hover { border-color: #4d9cf0; color: #4d9cf0; }
+    body.dark .day-tab.active {
+      background: #1d4ed8;
+      border-color: #1d4ed8;
+      color: #fff;
+    }
+    body.dark .no-result { color: #4a6278; }
+    body.dark #hint { color: #7a95ad; }
+    body.dark footer { color: #7a95ad; }
+    body.dark .dark-toggle {
+      background: #1a2636;
+      border-color: #2a3a4e;
+      color: #e2eaf4;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="toolbar">
+    <button class="dark-toggle" onclick="changeFontSize(-1)" id="btnSmall" aria-label="글자 크기 줄이기">A−</button>
+    <button class="dark-toggle" onclick="changeFontSize(1)" id="btnLarge" aria-label="글자 크기 크게">A+</button>
+    <button class="dark-toggle" onclick="toggleDark()" id="darkBtn" aria-label="다크모드 켜기">🌙 다크</button>
+  </div>
+  <h1>✈️ 2026 제주 미션트립</h1>
+  <p>이름 또는 영문 ID(LDAP)로 검색하세요</p>
+</header>
+
+<div class="search-box">
+  <label for="searchInput" class="sr-only">이름 또는 영문 ID로 검색</label>
+  <input type="text" id="searchInput" placeholder="예) 헤이든, david.0726" autocomplete="off"
+    aria-autocomplete="list" aria-controls="suggestions" aria-label="이름 또는 영문 ID로 검색" />
+  <span class="icon" aria-hidden="true">🔍</span>
+</div>
+
+<div id="suggestions" role="listbox" aria-label="검색 후보 목록"></div>
+<div id="result" aria-live="polite" aria-atomic="true"></div>
+<p id="hint" aria-live="polite">한글 이름 또는 영문 ID 입력</p>
+
+<footer>링키지랩</footer>
+
+<script>
+// ── 데이터 로드 ──────────────────────────────────────────
+let PEOPLE = [];
+
+fetch('https://script.google.com/macros/s/AKfycbxwK3Dl_QHqAenN803H9uJBi7OTirrt0BdYpZA2Ja5YoXdTSripmKzTLTdi3ImiTQ/exec')
+  .then(r => r.json())
+  .then(data => { PEOPLE = data; })
+  .catch(() => {
+    document.getElementById('result').innerHTML =
+      '<div class="no-result">데이터를 불러오지 못했습니다.<br>관리자에게 문의하세요.</div>';
+  });
+
+// ── 검색 로직 ────────────────────────────────────────────
+const input = document.getElementById('searchInput');
+const suggestionsEl = document.getElementById('suggestions');
+const resultEl = document.getElementById('result');
+const hintEl = document.getElementById('hint');
+
+function getMatches(q) {
+  return PEOPLE.filter(p =>
+    p.nickname.toLowerCase().includes(q) ||
+    p.name.toLowerCase().includes(q) ||
+    p.ldap.toLowerCase().includes(q)
+  );
+}
+
+function selectPerson(p) {
+  input.value = p.nickname;
+  suggestionsEl.style.display = 'none';
+  suggestionsEl.innerHTML = '';
+  showCard(p);
+  applyFontSize();
+  document.querySelector('.card')?.focus();
+}
+
+input.addEventListener('input', () => {
+  const q = input.value.trim().toLowerCase();
+  suggestionsEl.innerHTML = '';
+  suggestionsEl.style.display = 'none';
+  resultEl.innerHTML = '';
+
+  if (!q) { hintEl.style.display = 'block'; return; }
+  hintEl.style.display = 'none';
+
+  const matches = getMatches(q);
+  if (matches.length === 0) return;
+
+  suggestionsEl.style.display = 'block';
+  matches.slice(0, 8).forEach(p => {
+    const div = document.createElement('div');
+    div.className = 'suggestion-item';
+    div.setAttribute('role', 'option');
+    div.setAttribute('tabindex', '0');
+    div.setAttribute('aria-label', `${p.nickname}${p.name ? ' · ' + p.name : ''}, ${p.ldap}`);
+    div.innerHTML = `<div>${p.nickname}${p.name ? ' · ' + p.name : ''}</div><div class="sub">${p.ldap}</div>`;
+    div.addEventListener('click', () => selectPerson(p));
+    div.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectPerson(p); } });
+    suggestionsEl.appendChild(div);
+  });
+});
+
+input.addEventListener('keydown', e => {
+  if (e.key !== 'Enter') return;
+  e.preventDefault();
+  const q = input.value.trim().toLowerCase();
+  if (!q) return;
+  const matches = getMatches(q);
+  if (matches.length === 0) {
+    suggestionsEl.style.display = 'none';
+    resultEl.innerHTML = '<div class="no-result">검색 결과가 없습니다.<br>이름 또는 영문 ID를 다시 확인해주세요.</div>';
+  } else {
+    selectPerson(matches[0]);
+  }
+});
+
+// 외부 클릭 시 자동완성 닫기
+document.addEventListener('click', e => {
+  if (!e.target.closest('.search-box') && !e.target.closest('#suggestions')) {
+    suggestionsEl.style.display = 'none';
+  }
+});
+
+// ── 카드 렌더링 ──────────────────────────────────────────
+function val(v) { return v && v !== 'None' && v !== 'nan' ? v : '—'; }
+
+function showCard(p) {
+  const initial = p.nickname ? p.nickname[0] : '?';
+
+  resultEl.innerHTML = `
+    <div class="card" tabindex="-1">
+      <div class="card-header">
+        <div class="avatar" aria-hidden="true">${initial}</div>
+        <div class="card-header-text">
+          <h2>${val(p.nickname)}${p.name && p.name !== 'None' ? ` <span style="font-weight:400;font-size:0.9em;color:#8fa0b4">· ${val(p.name)}</span>` : ''}</h2>
+          <p>${val(p.ldap)}</p>
+        </div>
+      </div>
+
+      <div class="card-body">
+      <div class="section-title" aria-hidden="true">기본 정보</div>
+      <h3 class="sr-only">기본 정보</h3>
+      <div class="info-grid">
+        <div class="info-item">
+          <div class="info-label">🚌 버스</div>
+          <div class="info-value big">${val(p.bus)}</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">👥 조</div>
+          <div class="info-value big">${val(p.group)}</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">🏠 숙소</div>
+          <div class="info-value">${val(p.accommodation)}</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">🙋 조장</div>
+          <div class="info-value">${val(p.leader)}</div>
+        </div>
+      </div>
+
+      <div class="day-tabs" role="tablist" aria-label="일차별 정보">
+        <button class="day-tab active" role="tab" aria-selected="true" aria-controls="day1" onclick="switchDay(this, 'day1')">1일차</button>
+        <button class="day-tab" role="tab" aria-selected="false" aria-controls="day2" onclick="switchDay(this, 'day2')">2일차</button>
+        <button class="day-tab" role="tab" aria-selected="false" aria-controls="day3" onclick="switchDay(this, 'day3')">3일차</button>
+      </div>
+
+      <div id="day1" class="day-panel active" role="tabpanel" aria-label="1일차">
+        <div class="section-title"><span aria-hidden="true">✈️</span> 김포 → 제주</div>
+        <div class="info-grid">
+          <div class="info-item full">
+            <div class="info-label">⏰ 김포공항 집결</div>
+            <div class="info-value">${val(p.assembly_time)}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">항공사</div>
+            <div class="info-value">${val(p.dep_airline)}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">편명</div>
+            <div class="info-value">${val(p.dep_flight)}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">🚪 탑승구</div>
+            <div class="info-value">${val(p.dep_gate)}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">⏱ 출발 시간</div>
+            <div class="info-value">${val(p.dep_time)}</div>
+          </div>
+        </div>
+      </div>
+
+      <div id="day2" class="day-panel" role="tabpanel" aria-label="2일차">
+        <div class="section-title"><span aria-hidden="true">🍽️</span> 더클리프</div>
+        <div class="info-grid">
+          <div class="info-item">
+            <div class="info-label">음료</div>
+            <div class="info-value">${val(p.cliff_drink)}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">푸드박스</div>
+            <div class="info-value">${val(p.cliff_food)}</div>
+          </div>
+        </div>
+      </div>
+
+      <div id="day3" class="day-panel" role="tabpanel" aria-label="3일차">
+        <div class="section-title"><span aria-hidden="true">🌿</span> 치유의숲</div>
+        <div class="info-grid">
+          <div class="info-item">
+            <div class="info-label">프로그램</div>
+            <div class="info-value">${val(p.forest_program)}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">프로그램 조장</div>
+            <div class="info-value">${val(p.forest_group)}</div>
+          </div>
+        </div>
+        <div class="section-title"><span aria-hidden="true">✈️</span> 제주 → 김포</div>
+        <div class="info-grid">
+          <div class="info-item">
+            <div class="info-label">항공사</div>
+            <div class="info-value">${val(p.ret_airline)}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">편명</div>
+            <div class="info-value">${val(p.ret_flight)}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">🚪 탑승구</div>
+            <div class="info-value">${val(p.ret_gate)}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">⏱ 출발 시간</div>
+            <div class="info-value">${val(p.ret_time)}</div>
+          </div>
+        </div>
+      </div>
+
+      </div><!-- /.card-body -->
+    </div>
+  `;
+}
+
+const FONT_STEPS = [0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.4];
+let fontIdx = parseInt(localStorage.getItem('fontIdx') ?? '4');
+
+function applyFontSize() {
+  document.querySelectorAll('.card-body').forEach(c => c.style.fontSize = FONT_STEPS[fontIdx] + 'rem');
+}
+
+function changeFontSize(dir) {
+  fontIdx = Math.max(0, Math.min(FONT_STEPS.length - 1, fontIdx + dir));
+  localStorage.setItem('fontIdx', fontIdx);
+  applyFontSize();
+}
+
+applyFontSize();
+
+function toggleDark() {
+  const isDark = document.body.classList.toggle('dark');
+  const btn = document.getElementById('darkBtn');
+  btn.textContent = isDark ? '☀️ 라이트' : '🌙 다크';
+  btn.setAttribute('aria-label', isDark ? '라이트모드로 전환' : '다크모드로 전환');
+  localStorage.setItem('darkMode', isDark);
+}
+
+if (localStorage.getItem('darkMode') === 'true') {
+  document.body.classList.add('dark');
+  document.getElementById('darkBtn').textContent = '☀️ 라이트';
+}
+
+function switchDay(btn, panelId) {
+  btn.closest('.card').querySelectorAll('.day-tab').forEach(t => {
+    t.classList.remove('active');
+    t.setAttribute('aria-selected', 'false');
+  });
+  btn.closest('.card').querySelectorAll('.day-panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  btn.setAttribute('aria-selected', 'true');
+  btn.closest('.card').querySelector('#' + panelId).classList.add('active');
+}
+</script>
+</body>
+</html>
