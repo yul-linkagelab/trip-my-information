@@ -270,20 +270,24 @@
       border: 1.5px solid #d1dbe8;
       border-left: 4px solid #3b82f6;
       border-radius: 10px;
-      padding: 14px 16px;
+      padding: 32px 16px 14px;
       margin-bottom: 20px;
       font-size: 0.95rem;
       color: #1a3a5c;
       line-height: 1.6;
       white-space: pre-wrap;
       word-break: keep-all;
+      text-align: left;
+      position: relative;
     }
 
     .notice-box .notice-label {
+      position: absolute;
+      top: 10px;
+      left: 14px;
       font-size: 0.78rem;
       font-weight: 700;
       color: #3b82f6;
-      margin-bottom: 6px;
       letter-spacing: 0.03em;
     }
 
@@ -635,6 +639,8 @@ let fontIdx = parseInt(localStorage.getItem('fontIdx') ?? '4');
 
 function applyFontSize() {
   document.querySelectorAll('.card-body').forEach(c => c.style.fontSize = FONT_STEPS[fontIdx] + 'rem');
+  const noticeText = document.getElementById('noticeText');
+  if (noticeText) noticeText.style.fontSize = FONT_STEPS[fontIdx] + 'rem';
 }
 
 function changeFontSize(dir) {
