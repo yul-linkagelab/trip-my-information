@@ -391,9 +391,9 @@
     <button class="dark-toggle" onclick="changeFontSize(1)" id="btnLarge" aria-label="글자 크기 크게">A+</button>
     <button class="dark-toggle" onclick="toggleDark()" id="darkBtn" aria-label="다크모드 켜기">🌙 다크</button>
   </div>
-  <div class="notice-box empty" id="noticeBox">
-    <div class="notice-label">📢 공지사항</div>
-    <span id="noticeText">불러오는 중...</span>
+  <div class="notice-box empty" id="noticeBox" role="region" aria-label="공지사항">
+    <div class="notice-label"><span aria-hidden="true">📢</span> 공지사항</div>
+    <span id="noticeText" aria-live="polite" aria-atomic="true">불러오는 중...</span>
   </div>
 </header>
 
@@ -575,63 +575,63 @@ function showCard(p) {
       </div>
 
       <div class="card-body">
-      <div class="section-title" aria-hidden="true">기본 정보</div>
+      <div class="section-title">기본 정보</div>
       <div class="info-grid">
-        <div class="info-item">
-          <div class="info-label">🚌 버스</div>
+        <div class="info-item" role="group" aria-label="버스">
+          <div class="info-label"><span aria-hidden="true">🚌</span> 버스</div>
           <div class="info-value big">${val(p.bus)}</div>
         </div>
-        <div class="info-item">
-          <div class="info-label">👥 조</div>
+        <div class="info-item" role="group" aria-label="조">
+          <div class="info-label"><span aria-hidden="true">👥</span> 조</div>
           <div class="info-value big">${val(p.group)}</div>
         </div>
-        <div class="info-item">
-          <div class="info-label">🏠 숙소</div>
+        <div class="info-item" role="group" aria-label="숙소">
+          <div class="info-label"><span aria-hidden="true">🏠</span> 숙소</div>
           <div class="info-value">${val(p.accommodation)}</div>
         </div>
-        <div class="info-item">
-          <div class="info-label">🙋 조장</div>
+        <div class="info-item" role="group" aria-label="조장">
+          <div class="info-label"><span aria-hidden="true">🙋</span> 조장</div>
           <div class="info-value">${val(p.leader)}</div>
         </div>
       </div>
 
-      <div class="day-tabs" role="tablist">
-        <button class="day-tab ${activeTabId === 'day1' ? 'active' : ''}" role="tab" aria-selected="${activeTabId === 'day1'}" aria-controls="day1" onclick="switchDay(this, 'day1')">1일차</button>
-        <button class="day-tab ${activeTabId === 'day2' ? 'active' : ''}" role="tab" aria-selected="${activeTabId === 'day2'}" aria-controls="day2" onclick="switchDay(this, 'day2')">2일차</button>
-        <button class="day-tab ${activeTabId === 'day3' ? 'active' : ''}" role="tab" aria-selected="${activeTabId === 'day3'}" aria-controls="day3" onclick="switchDay(this, 'day3')">3일차</button>
+      <div class="day-tabs" role="tablist" aria-label="일차 선택">
+        <button id="tab-day1" class="day-tab ${activeTabId === 'day1' ? 'active' : ''}" role="tab" aria-selected="${activeTabId === 'day1'}" aria-controls="day1" onclick="switchDay(this, 'day1')">1일차</button>
+        <button id="tab-day2" class="day-tab ${activeTabId === 'day2' ? 'active' : ''}" role="tab" aria-selected="${activeTabId === 'day2'}" aria-controls="day2" onclick="switchDay(this, 'day2')">2일차</button>
+        <button id="tab-day3" class="day-tab ${activeTabId === 'day3' ? 'active' : ''}" role="tab" aria-selected="${activeTabId === 'day3'}" aria-controls="day3" onclick="switchDay(this, 'day3')">3일차</button>
       </div>
 
-      <div id="day1" class="day-panel ${activeTabId === 'day1' ? 'active' : ''}" role="tabpanel">
-        <div class="section-title">✈️ 김포 → 제주</div>
+      <div id="day1" class="day-panel ${activeTabId === 'day1' ? 'active' : ''}" role="tabpanel" aria-labelledby="tab-day1">
+        <div class="section-title"><span aria-hidden="true">✈️</span> 김포 → 제주</div>
         <div class="info-grid">
-          <div class="info-item full"><div class="info-label">⏰ 김포공항 집결</div><div class="info-value">${val(p.assembly_time)}</div></div>
-          <div class="info-item"><div class="info-label">항공사</div><div class="info-value">${val(p.dep_airline)}</div></div>
-          <div class="info-item"><div class="info-label">편명</div><div class="info-value">${val(p.dep_flight)}</div></div>
-          <div class="info-item"><div class="info-label">🚪 탑승구</div><div class="info-value">${val(p.dep_gate)}</div></div>
-          <div class="info-item"><div class="info-label">⏱ 출발 시간</div><div class="info-value">${val(p.dep_time)}</div></div>
+          <div class="info-item full" role="group" aria-label="김포공항 집결"><div class="info-label"><span aria-hidden="true">⏰</span> 김포공항 집결</div><div class="info-value">${val(p.assembly_time)}</div></div>
+          <div class="info-item" role="group" aria-label="항공사"><div class="info-label">항공사</div><div class="info-value">${val(p.dep_airline)}</div></div>
+          <div class="info-item" role="group" aria-label="편명"><div class="info-label">편명</div><div class="info-value">${val(p.dep_flight)}</div></div>
+          <div class="info-item" role="group" aria-label="탑승구"><div class="info-label"><span aria-hidden="true">🚪</span> 탑승구</div><div class="info-value">${val(p.dep_gate)}</div></div>
+          <div class="info-item" role="group" aria-label="출발 시간"><div class="info-label"><span aria-hidden="true">⏱</span> 출발 시간</div><div class="info-value">${val(p.dep_time)}</div></div>
         </div>
       </div>
 
-      <div id="day2" class="day-panel ${activeTabId === 'day2' ? 'active' : ''}" role="tabpanel">
-        <div class="section-title">🍽️ 더클리프</div>
+      <div id="day2" class="day-panel ${activeTabId === 'day2' ? 'active' : ''}" role="tabpanel" aria-labelledby="tab-day2">
+        <div class="section-title"><span aria-hidden="true">🍽️</span> 더클리프</div>
         <div class="info-grid">
-          <div class="info-item"><div class="info-label">음료</div><div class="info-value">${val(p.cliff_drink)}</div></div>
-          <div class="info-item"><div class="info-label">푸드박스</div><div class="info-value">${val(p.cliff_food)}</div></div>
+          <div class="info-item" role="group" aria-label="음료"><div class="info-label">음료</div><div class="info-value">${val(p.cliff_drink)}</div></div>
+          <div class="info-item" role="group" aria-label="푸드박스"><div class="info-label">푸드박스</div><div class="info-value">${val(p.cliff_food)}</div></div>
         </div>
       </div>
 
-      <div id="day3" class="day-panel ${activeTabId === 'day3' ? 'active' : ''}" role="tabpanel">
-        <div class="section-title">🌿 치유의숲</div>
+      <div id="day3" class="day-panel ${activeTabId === 'day3' ? 'active' : ''}" role="tabpanel" aria-labelledby="tab-day3">
+        <div class="section-title"><span aria-hidden="true">🌿</span> 치유의숲</div>
         <div class="info-grid">
-          <div class="info-item"><div class="info-label">프로그램</div><div class="info-value">${val(p.forest_program)}</div></div>
-          <div class="info-item"><div class="info-label">프로그램 조장</div><div class="info-value">${val(p.forest_group)}</div></div>
+          <div class="info-item" role="group" aria-label="프로그램"><div class="info-label">프로그램</div><div class="info-value">${val(p.forest_program)}</div></div>
+          <div class="info-item" role="group" aria-label="프로그램 조장"><div class="info-label">프로그램 조장</div><div class="info-value">${val(p.forest_group)}</div></div>
         </div>
-        <div class="section-title">✈️ 제주 → 김포</div>
+        <div class="section-title"><span aria-hidden="true">✈️</span> 제주 → 김포</div>
         <div class="info-grid">
-          <div class="info-item"><div class="info-label">항공사</div><div class="info-value">${val(p.ret_airline)}</div></div>
-          <div class="info-item"><div class="info-label">편명</div><div class="info-value">${val(p.ret_flight)}</div></div>
-          <div class="info-item"><div class="info-label">🚪 탑승구</div><div class="info-value">${val(p.ret_gate)}</div></div>
-          <div class="info-item"><div class="info-label">⏱ 출발 시간</div><div class="info-value">${val(p.ret_time)}</div></div>
+          <div class="info-item" role="group" aria-label="항공사"><div class="info-label">항공사</div><div class="info-value">${val(p.ret_airline)}</div></div>
+          <div class="info-item" role="group" aria-label="편명"><div class="info-label">편명</div><div class="info-value">${val(p.ret_flight)}</div></div>
+          <div class="info-item" role="group" aria-label="탑승구"><div class="info-label"><span aria-hidden="true">🚪</span> 탑승구</div><div class="info-value">${val(p.ret_gate)}</div></div>
+          <div class="info-item" role="group" aria-label="출발 시간"><div class="info-label"><span aria-hidden="true">⏱</span> 출발 시간</div><div class="info-value">${val(p.ret_time)}</div></div>
         </div>
       </div>
       </div>
@@ -658,6 +658,7 @@ function toggleDark() {
   const isDark = document.body.classList.toggle('dark');
   const btn = document.getElementById('darkBtn');
   btn.textContent = isDark ? '☀️ 라이트' : '🌙 다크';
+  btn.setAttribute('aria-label', isDark ? '라이트모드로 전환' : '다크모드로 전환');
   localStorage.setItem('darkMode', isDark);
 }
 
