@@ -53,6 +53,14 @@
       color: #6b7a8d;
     }
 
+    main {
+      width: 100%;
+      max-width: 480px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
     .search-box {
       width: 100%;
       max-width: 480px;
@@ -303,6 +311,7 @@
       color: #1a3a5c;
       text-align: left;
       position: relative;
+      overflow: hidden;
     }
 
     .notice-box .notice-label {
@@ -319,8 +328,11 @@
       display: block;
       white-space: pre-line;
       word-break: keep-all;
+      overflow-wrap: break-word;
+      overflow: hidden;
       line-height: 1.6;
       margin-top: 12px;
+      width: 100%;
     }
 
     .notice-box.empty {
