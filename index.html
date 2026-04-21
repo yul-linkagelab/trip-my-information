@@ -7,6 +7,16 @@
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
+    /* ── 건너뛰기 링크 (2.4.1 A) ── */
+    .skip-nav {
+      position: absolute; top: -999px; left: 0;
+      background: #1a3a5c; color: #fff;
+      padding: 8px 16px; border-radius: 0 0 8px 8px;
+      font-weight: 700; font-size: 0.9rem; z-index: 9999;
+      text-decoration: none;
+    }
+    .skip-nav:focus { top: 0; }
+
     body {
       font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
       background: #f0f4f8;
@@ -50,22 +60,25 @@
       margin-bottom: 12px;
     }
 
+    /* outline: none 제거 (2.4.7 AA) */
     .search-box input {
       width: 100%;
       padding: 14px 48px 14px 18px;
       font-size: 1rem;
       border: 2px solid #d1dbe8;
       border-radius: 12px;
-      outline: none;
       background: #fff;
       transition: border-color 0.2s;
       color: #1a3a5c;
     }
 
+    /* 포커스 표시 강화 (2.4.7 AA) */
     .search-box input:focus {
       border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59,130,246,0.35);
     }
 
+    /* placeholder는 그대로 유지 */
     .search-box input::placeholder {
       color: #aab4c0;
     }
@@ -102,9 +115,13 @@
     .suggestion-item:last-child { border-bottom: none; }
     .suggestion-item:hover { background: #eef3fa; }
 
+    /* suggestion-item 포커스 표시 (2.4.7 AA) */
+    .suggestion-item:focus-visible { outline: 2px solid #3b82f6; outline-offset: -2px; }
+
+    /* #8fa0b4 → #566879 (1.4.3 AA) */
     .suggestion-item .sub {
       font-size: 0.78rem;
-      color: #8fa0b4;
+      color: #566879;
       margin-top: 2px;
     }
 
@@ -155,9 +172,10 @@
       color: #1a3a5c;
     }
 
+    /* #8fa0b4 → #566879 (1.4.3 AA) */
     .card-header-text p {
       font-size: 0.82rem;
-      color: #8fa0b4;
+      color: #566879;
       margin-top: 2px;
     }
 
@@ -189,9 +207,10 @@
       grid-column: 1 / -1;
     }
 
+    /* #8fa0b4 → #566879 (1.4.3 AA) */
     .info-label {
       font-size: 1em;
-      color: #8fa0b4;
+      color: #566879;
       margin-bottom: 4px;
     }
 
@@ -219,13 +238,14 @@
       margin: 16px 0 12px;
     }
 
+    /* #8fa0b4 → #566879 (1.4.3 AA) */
     .day-tab {
       flex: 1;
       padding: 9px 0;
       border: 2px solid #d1dbe8;
       border-radius: 10px;
       background: #fff;
-      color: #8fa0b4;
+      color: #566879;
       font-size: 1em;
       font-weight: 700;
       cursor: pointer;
@@ -241,6 +261,10 @@
       color: #fff;
     }
 
+    /* 포커스 표시 (2.4.7 AA) */
+    .dark-toggle:focus-visible,
+    .day-tab:focus-visible { outline: 2px solid #3b82f6; outline-offset: 2px; }
+
     .day-panel { display: none; }
     .day-panel.active { display: block; }
 
@@ -250,16 +274,18 @@
       clip: rect(0,0,0,0); white-space: nowrap; border: 0;
     }
 
+    /* #8fa0b4 → #566879 (1.4.3 AA) */
     .no-result {
       text-align: center;
-      color: #8fa0b4;
+      color: #566879;
       padding: 32px 0;
       font-size: 0.95rem;
     }
 
+    /* #aab4c0 → #566879 (1.4.3 AA), placeholder는 유지 */
     #hint {
       text-align: center;
-      color: #aab4c0;
+      color: #566879;
       font-size: 1.105rem;
       margin-top: 8px;
     }
@@ -312,10 +338,11 @@
     body.dark .notice-box.empty { color: #4a6278; border-left-color: #2a3a4e; }
     body.dark .notice-box .notice-label { color: #4d9cf0; }
 
+    /* footer color #6b7a8d → #4e5f6e (1.4.3 AA) */
     footer {
       margin-top: 16px;
       font-size: 0.975rem;
-      color: #6b7a8d;
+      color: #4e5f6e;
       font-weight: 600;
       text-align: center;
       line-height: 1.7;
@@ -386,6 +413,9 @@
 </head>
 <body>
 
+<!-- 건너뛰기 링크 (2.4.1 A) -->
+<a href="#main-content" class="skip-nav">본문 바로가기</a>
+
 <header>
   <div class="toolbar">
     <button class="dark-toggle" onclick="changeFontSize(-1)" id="btnSmall" aria-label="글자 크기 줄이기">A−</button>
@@ -398,10 +428,14 @@
   </div>
 </header>
 
+<!-- main 랜드마크 (1.3.1 A) -->
+<main id="main-content">
+
 <div class="search-box">
   <label for="searchInput" class="sr-only">이름 또는 영문 ID로 검색</label>
   <input type="text" id="searchInput" placeholder="예) 헤이든, david.0726" autocomplete="off"
-    aria-autocomplete="list" aria-controls="suggestions" aria-label="이름 또는 영문 ID로 검색" />
+    aria-autocomplete="list" aria-controls="suggestions" aria-label="이름 또는 영문 ID로 검색"
+    aria-expanded="false" />
   <span class="icon" aria-hidden="true">🔍</span>
 </div>
 
@@ -409,7 +443,9 @@
 <div id="result" aria-live="polite" aria-atomic="true"></div>
 <p id="hint" aria-live="polite">한글 이름 또는 영문 ID 입력</p>
 
-<footer>✈️ 2026 제주 미션트립<br>링키지랩</footer>
+<footer><span aria-hidden="true">✈️</span> 2026 제주 미션트립<br>링키지랩</footer>
+
+</main>
 
 <script>
 // ── 1. 데이터 로드 및 관리 로직 ──────────────────────────────
@@ -454,11 +490,11 @@ function refreshFromSheet() {
 
         // 최신 데이터 로컬 스토리지에 저장
         localStorage.setItem('missionTripData', JSON.stringify(PEOPLE));
-        
+
         // 로딩 완료 후 검색창 활성화
         input.disabled = false;
         input.placeholder = "예) 헤이든, david.0726";
-        
+
         // [추가 기능] 현재 보고 있는 카드가 있다면 실시간으로 데이터 업데이트
         const currentLdap = document.querySelector('.card-header-text p')?.innerText;
         if (currentLdap) {
@@ -505,6 +541,8 @@ function selectPerson(p) {
   input.value = p.nickname || p.name || '';
   suggestionsEl.style.display = 'none';
   suggestionsEl.innerHTML = '';
+  // aria-expanded 연동 (2.1.1 A)
+  input.setAttribute('aria-expanded', 'false');
   showCard(p);
   applyFontSize();
   window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -514,6 +552,8 @@ input.addEventListener('input', () => {
   const q = input.value.trim().toLowerCase();
   suggestionsEl.innerHTML = '';
   suggestionsEl.style.display = 'none';
+  // aria-expanded 연동 (2.1.1 A)
+  input.setAttribute('aria-expanded', 'false');
   resultEl.innerHTML = '';
 
   if (!q) { hintEl.style.display = 'block'; return; }
@@ -523,6 +563,8 @@ input.addEventListener('input', () => {
   if (matches.length === 0) return;
 
   suggestionsEl.style.display = 'block';
+  // aria-expanded 연동 (2.1.1 A)
+  input.setAttribute('aria-expanded', 'true');
   matches.slice(0, 8).forEach(p => {
     const div = document.createElement('div');
     div.className = 'suggestion-item';
@@ -536,7 +578,20 @@ input.addEventListener('input', () => {
   });
 });
 
+// ArrowDown/ArrowUp 키보드 탐색 (2.1.1 A)
 input.addEventListener('keydown', e => {
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    const items = suggestionsEl.querySelectorAll('.suggestion-item');
+    if (items.length > 0) items[0].focus();
+    return;
+  }
+  if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    const items = suggestionsEl.querySelectorAll('.suggestion-item');
+    if (items.length > 0) items[items.length - 1].focus();
+    return;
+  }
   if (e.key !== 'Enter') return;
   e.preventDefault();
   const q = input.value.trim().toLowerCase();
@@ -544,15 +599,44 @@ input.addEventListener('keydown', e => {
   const matches = getMatches(q);
   if (matches.length === 0) {
     suggestionsEl.style.display = 'none';
-    resultEl.innerHTML = '<div class="no-result">검색 결과가 없습니다.<br>이름 또는 영문 ID를 다시 확인해주세요.</div>';
+    input.setAttribute('aria-expanded', 'false');
+    // role="alert" 추가 (3.3.1 A)
+    resultEl.innerHTML = '<div class="no-result" role="alert">검색 결과가 없습니다.<br>이름 또는 영문 ID를 다시 확인해주세요.</div>';
   } else {
     selectPerson(matches[0]);
+  }
+});
+
+// suggestion-item 간 ArrowDown/ArrowUp 이동 (2.1.1 A)
+suggestionsEl.addEventListener('keydown', e => {
+  const items = Array.from(suggestionsEl.querySelectorAll('.suggestion-item'));
+  const focused = document.activeElement;
+  const idx = items.indexOf(focused);
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    if (idx < items.length - 1) items[idx + 1].focus();
+    return;
+  }
+  if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    if (idx > 0) {
+      items[idx - 1].focus();
+    } else {
+      input.focus();
+    }
+    return;
+  }
+  if (e.key === 'Escape') {
+    suggestionsEl.style.display = 'none';
+    input.setAttribute('aria-expanded', 'false');
+    input.focus();
   }
 });
 
 document.addEventListener('click', e => {
   if (!e.target.closest('.search-box') && !e.target.closest('#suggestions')) {
     suggestionsEl.style.display = 'none';
+    input.setAttribute('aria-expanded', 'false');
   }
 });
 
@@ -570,7 +654,7 @@ function showCard(p) {
       <div class="card-header">
         <div class="avatar" aria-hidden="true">${initial}</div>
         <div class="card-header-text">
-          <h2>${val(p.nickname)}${p.name && p.name !== 'None' ? ` <span style="font-weight:400;font-size:0.9em;color:#8fa0b4">· ${val(p.name)}</span>` : ''}</h2>
+          <h2>${val(p.nickname)}${p.name && p.name !== 'None' ? ` <span style="font-weight:400;font-size:0.9em;color:#566879">· ${val(p.name)}</span>` : ''}</h2>
           <p>${val(p.ldap)}</p>
         </div>
       </div>
