@@ -263,11 +263,52 @@
       margin-top: 8px;
     }
 
+    .notice-box {
+      width: 100%;
+      max-width: 480px;
+      background: #fff;
+      border: 1.5px solid #d1dbe8;
+      border-left: 4px solid #3b82f6;
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin-bottom: 20px;
+      font-size: 0.95rem;
+      color: #1a3a5c;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      word-break: keep-all;
+    }
+
+    .notice-box .notice-label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #3b82f6;
+      margin-bottom: 6px;
+      letter-spacing: 0.03em;
+    }
+
+    .notice-box.empty {
+      color: #aab4c0;
+      font-size: 0.88rem;
+      border-left-color: #d1dbe8;
+    }
+
+    body.dark .notice-box {
+      background: #1a2636;
+      border-color: #2a3a4e;
+      border-left-color: #4d9cf0;
+      color: #e2eaf4;
+    }
+    body.dark .notice-box.empty { color: #4a6278; border-left-color: #2a3a4e; }
+    body.dark .notice-box .notice-label { color: #4d9cf0; }
+
     footer {
       margin-top: 48px;
       font-size: 0.975rem;
-      color: #c0cdd8;
+      color: #6b7a8d;
+      font-weight: 600;
       text-align: center;
+      line-height: 1.7;
     }
 
     .dark-toggle {
@@ -341,8 +382,10 @@
     <button class="dark-toggle" onclick="changeFontSize(1)" id="btnLarge" aria-label="글자 크기 크게">A+</button>
     <button class="dark-toggle" onclick="toggleDark()" id="darkBtn" aria-label="다크모드 켜기">🌙 다크</button>
   </div>
-  <h1>✈️ 2026 제주 미션트립</h1>
-  <p>이름 또는 영문 ID(LDAP)로 검색하세요</p>
+  <div class="notice-box empty" id="noticeBox">
+    <div class="notice-label">📢 공지사항</div>
+    <span id="noticeText">불러오는 중...</span>
+  </div>
 </header>
 
 <div class="search-box">
@@ -356,7 +399,7 @@
 <div id="result" aria-live="polite" aria-atomic="true"></div>
 <p id="hint" aria-live="polite">한글 이름 또는 영문 ID 입력</p>
 
-<footer>링키지랩</footer>
+<footer>✈️ 2026 제주 미션트립<br>링키지랩</footer>
 
 <script>
 // ── 1. 데이터 로드 및 관리 로직 ──────────────────────────────
@@ -384,9 +427,21 @@ function refreshFromSheet() {
   fetch(GAS_URL)
     .then(r => r.json())
     .then(data => {
+      if (data.notice !== undefined) {
+        const box = document.getElementById('noticeBox');
+        const txt = document.getElementById('noticeText');
+        if (data.notice && data.notice.trim()) {
+          txt.textContent = data.notice.trim();
+          box.classList.remove('empty');
+        } else {
+          txt.textContent = '등록된 공지사항이 없습니다.';
+          box.classList.add('empty');
+        }
+      }
+
       if (data.people && data.people.length) {
         PEOPLE = data.people;
-        
+
         // 최신 데이터 로컬 스토리지에 저장
         localStorage.setItem('missionTripData', JSON.stringify(PEOPLE));
         
@@ -442,7 +497,7 @@ function selectPerson(p) {
   suggestionsEl.innerHTML = '';
   showCard(p);
   applyFontSize();
-  document.querySelector('.card')?.focus();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 input.addEventListener('input', () => {
