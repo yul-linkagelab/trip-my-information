@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
@@ -36,15 +36,29 @@
       width: 100%;
       max-width: 480px;
       text-align: center;
-      margin-bottom: 32px;
+      margin-bottom: 12px;
     }
 
     .toolbar {
       display: flex;
-      justify-content: flex-end;
+      justify-content: space-between;
+      align-items: center;
       gap: 6px;
       margin-bottom: 12px;
     }
+
+    .toolbar-right {
+      display: flex;
+      gap: 6px;
+    }
+
+    .team-btn {
+      background: #3b82f6;
+      border-color: #3b82f6;
+      color: #fff;
+    }
+    .team-btn:hover { background: #2563eb; border-color: #2563eb; }
+    body.dark .team-btn { background: #1d4ed8; border-color: #1d4ed8; color: #fff; }
 
     header h1 {
       font-size: 1.5rem;
@@ -64,6 +78,10 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+    }
+
+    #mainView {
+      width: 100%;
     }
 
     .search-box {
@@ -311,7 +329,7 @@
       border-left: 4px solid #3b82f6;
       border-radius: 10px;
       padding: 22px 16px 8px;
-      margin-bottom: 20px;
+      margin-bottom: 0;
       font-size: 0.95rem;
       color: #1a3a5c;
       text-align: left;
@@ -426,6 +444,170 @@
       border-color: #2a3a4e;
       color: #e2eaf4;
     }
+
+
+    /* ── 출석 체크 뷰 ── */
+    #attendanceView { width: 100%; }
+
+    .att-breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.82rem;
+      color: #566879;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+    .att-crumb-btn {
+      background: none; border: none; padding: 4px 2px;
+      color: #3b82f6; font-weight: 600; font-size: 0.82rem;
+      cursor: pointer; font-family: inherit;
+    }
+    .att-crumb-sep { color: #aab4c0; }
+    .att-crumb-current { color: #1a3a5c; font-weight: 700; }
+    body.dark .att-crumb-current { color: #e2eaf4; }
+    body.dark .att-breadcrumb { color: #94afc8; }
+
+    .att-section-title {
+      font-size: 0.88rem; font-weight: 700; color: #566879;
+      margin-bottom: 12px; letter-spacing: 0.02em;
+    }
+    body.dark .att-section-title { color: #94afc8; }
+
+    /* 일차 선택 */
+    .att-day-grid { display: flex; gap: 10px; }
+    .att-day-btn {
+      flex: 1; display: flex; flex-direction: column;
+      align-items: center; padding: 16px 8px;
+      background: #fff; border: 2px solid #d1dbe8;
+      border-radius: 14px; cursor: pointer;
+      transition: all 0.15s; font-family: inherit;
+    }
+    .att-day-btn:hover { border-color: #3b82f6; background: #f0f6ff; }
+    .att-day-btn:focus-visible { outline: 2px solid #3b82f6; outline-offset: 2px; }
+    .att-day-btn .day-emoji { font-size: 1.5rem; }
+    .att-day-btn .day-num  { font-size: 1rem; font-weight: 700; color: #1a3a5c; margin-top: 4px; }
+    .att-day-btn .day-date { font-size: 0.72rem; color: #566879; margin-top: 2px; }
+    body.dark .att-day-btn { background: #1a2636; border-color: #4a6278; }
+    body.dark .att-day-btn .day-num  { color: #e2eaf4; }
+    body.dark .att-day-btn .day-date { color: #94afc8; }
+    body.dark .att-day-btn:hover { background: #1f3044; border-color: #3b82f6; }
+
+    /* 스팟 선택 */
+    .att-spot-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .att-spot-btn {
+      padding: 14px 10px; background: #fff;
+      border: 2px solid #d1dbe8; border-radius: 12px;
+      cursor: pointer; text-align: center;
+      font-family: inherit; transition: all 0.15s;
+    }
+    .att-spot-btn:hover { border-color: #3b82f6; background: #f0f6ff; }
+    .att-spot-btn:focus-visible { outline: 2px solid #3b82f6; outline-offset: 2px; }
+    .att-spot-btn .spot-emoji { font-size: 1.6rem; }
+    .att-spot-btn .spot-label { font-size: 0.88rem; font-weight: 700; color: #1a3a5c; margin-top: 6px; }
+    body.dark .att-spot-btn { background: #1a2636; border-color: #4a6278; }
+    body.dark .att-spot-btn .spot-label { color: #e2eaf4; }
+    body.dark .att-spot-btn:hover { background: #1f3044; border-color: #3b82f6; }
+
+    /* 조 선택 */
+    .att-group-layout { display: flex; flex-direction: column; gap: 8px; }
+    .att-group-row { display: flex; gap: 8px; }
+    .att-group-row .att-group-btn { flex: 1; }
+    .att-group-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .att-group-btn {
+      padding: 12px 6px; background: #fff;
+      border: 2px solid #d1dbe8; border-radius: 10px;
+      cursor: pointer; text-align: center;
+      font-family: inherit; font-size: 0.92rem; font-weight: 700;
+      color: #1a3a5c; transition: all 0.15s;
+    }
+    .att-group-btn:hover { border-color: #3b82f6; background: #f0f6ff; }
+    .att-group-btn:focus-visible { outline: 2px solid #3b82f6; outline-offset: 2px; }
+    .att-group-count { font-size: 0.72rem; font-weight: 400; color: #566879; display: block; margin-top: 3px; }
+    .att-group-btn.done { border-color: #10b981; background: #f0fdf4; }
+    body.dark .att-group-btn { background: #1a2636; border-color: #4a6278; color: #e2eaf4; }
+    body.dark .att-group-btn .att-group-count { color: #94afc8; }
+    body.dark .att-group-btn:hover { background: #1f3044; border-color: #3b82f6; }
+    body.dark .att-group-btn.done { background: #0d2b1e; border-color: #059669; }
+
+    /* 출석 헤더 */
+    .att-header {
+      background: #fff; border-radius: 14px;
+      padding: 16px; margin-bottom: 12px;
+      box-shadow: 0 2px 12px rgba(26,58,92,0.07);
+    }
+    body.dark .att-header { background: #1a2636; box-shadow: 0 2px 12px rgba(0,0,0,0.25); }
+    .att-title { font-size: 1.05rem; font-weight: 700; color: #1a3a5c; margin-bottom: 4px; }
+    body.dark .att-title { color: #e2eaf4; }
+    .att-subtitle { font-size: 0.82rem; color: #566879; }
+    body.dark .att-subtitle { color: #94afc8; }
+    .att-count {
+      display: inline-block; background: #dbeafe; color: #1d4ed8;
+      padding: 2px 9px; border-radius: 20px;
+      font-size: 0.78rem; font-weight: 700; margin-left: 6px;
+    }
+    body.dark .att-count { background: #1e3a5f; color: #93c5fd; }
+
+    /* 체크리스트 */
+    .att-list {
+      background: #fff; border-radius: 14px; padding: 6px;
+      box-shadow: 0 2px 12px rgba(26,58,92,0.07);
+    }
+    body.dark .att-list { background: #1a2636; }
+
+    .att-member-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 10px; border-radius: 10px;
+      cursor: pointer; background: none; border: none;
+      width: 100%; font-family: inherit; text-align: left;
+      transition: background 0.12s;
+    }
+    .att-member-item:hover { background: #f0f6ff; }
+    .att-member-item:focus-visible { outline: 2px solid #3b82f6; outline-offset: -2px; border-radius: 10px; }
+    body.dark .att-member-item:hover { background: #1f3044; }
+
+    .att-check-icon {
+      width: 34px; height: 34px; border-radius: 50%;
+      border: 2px solid #d1dbe8; background: #f7fafd;
+      font-size: 1rem; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; transition: all 0.15s;
+      color: #aab4c0;
+    }
+    .att-check-icon.present { background: #d1fae5; border-color: #10b981; color: #065f46; }
+    .att-check-icon.absent  { background: #fee2e2; border-color: #ef4444; color: #b91c1c; }
+    body.dark .att-check-icon { background: #111e2b; border-color: #4a6278; color: #4a6278; }
+    body.dark .att-check-icon.present { background: #052e16; border-color: #059669; color: #34d399; }
+    body.dark .att-check-icon.absent  { background: #2d0707; border-color: #dc2626; color: #fca5a5; }
+
+    .att-member-info { flex: 1; min-width: 0; }
+    .att-member-name { font-size: 0.95rem; font-weight: 600; color: #1a3a5c; }
+    .att-member-ldap { font-size: 0.76rem; color: #566879; margin-top: 1px; }
+    body.dark .att-member-name { color: #e2eaf4; }
+    body.dark .att-member-ldap { color: #94afc8; }
+
+    .att-leader-badge {
+      display: inline-block; font-size: 0.68rem; font-weight: 700;
+      background: #fef3c7; color: #92400e;
+      padding: 1px 6px; border-radius: 6px;
+      margin-left: 5px; vertical-align: middle;
+      letter-spacing: 0.02em;
+    }
+    body.dark .att-leader-badge { background: #451a03; color: #fcd34d; }
+
+    /* 액션 버튼 */
+    .att-actions { display: flex; gap: 10px; margin-top: 14px; }
+    .att-all-btn {
+      flex: 1; padding: 12px 8px;
+      background: #f0f4f8; border: 2px solid #d1dbe8;
+      border-radius: 10px; font-family: inherit;
+      font-size: 0.88rem; font-weight: 700; color: #1a3a5c;
+      cursor: pointer; transition: all 0.15s;
+    }
+    .att-all-btn:hover { border-color: #10b981; background: #f0fdf4; color: #065f46; }
+    .att-all-btn:focus-visible { outline: 2px solid #10b981; outline-offset: 2px; }
+    body.dark .att-all-btn { background: #1a2636; border-color: #4a6278; color: #e2eaf4; }
+    body.dark .att-all-btn:hover { border-color: #059669; background: #052e16; color: #34d399; }
   </style>
 </head>
 <body>
@@ -435,9 +617,12 @@
 
 <header>
   <div class="toolbar">
-    <button class="dark-toggle" onclick="changeFontSize(-1)" id="btnSmall" aria-label="글자 크기 줄이기">A−</button>
-    <button class="dark-toggle" onclick="changeFontSize(1)" id="btnLarge" aria-label="글자 크기 크게">A+</button>
-    <button class="dark-toggle" onclick="toggleDark()" id="darkBtn" aria-label="다크모드 켜기">🌙 다크</button>
+    <button class="dark-toggle team-btn" onclick="toggleAttView()" id="teamBtn" aria-label="조 명단 확인">👥 조 명단 확인</button>
+    <div class="toolbar-right">
+      <button class="dark-toggle" onclick="changeFontSize(-1)" id="btnSmall" aria-label="글자 크기 줄이기">A−</button>
+      <button class="dark-toggle" onclick="changeFontSize(1)" id="btnLarge" aria-label="글자 크기 크게">A+</button>
+      <button class="dark-toggle" onclick="toggleDark()" id="darkBtn" aria-label="다크모드 켜기">🌙 다크</button>
+    </div>
   </div>
   <div class="notice-box empty" id="noticeBox" role="region" aria-label="공지사항">
     <div class="notice-label"><span aria-hidden="true">📢</span> 공지사항</div>
@@ -448,17 +633,24 @@
 <!-- main 랜드마크 (1.3.1 A) -->
 <main id="main-content">
 
-<div class="search-box">
-  <label for="searchInput" class="sr-only">이름 또는 영문 ID로 검색</label>
-  <input type="text" id="searchInput" placeholder="예) 헤이든, david.0726" autocomplete="off"
-    aria-autocomplete="list" aria-controls="suggestions" aria-label="이름 또는 영문 ID로 검색"
-    aria-expanded="false" />
-  <span class="icon" aria-hidden="true">🔍</span>
+<!-- 내 정보 조회 뷰 -->
+<div id="mainView">
+  <div class="search-box">
+    <label for="searchInput" class="sr-only">이름 또는 영문 ID로 검색</label>
+    <input type="text" id="searchInput" placeholder="예) 헤이든, david.0726" autocomplete="off"
+      aria-autocomplete="list" aria-controls="suggestions" aria-label="이름 또는 영문 ID로 검색"
+      aria-expanded="false" />
+    <span class="icon" aria-hidden="true">🔍</span>
+  </div>
+  <div id="suggestions" role="listbox" aria-label="검색 후보 목록"></div>
+  <div id="result" aria-live="polite" aria-atomic="true"></div>
+  <p id="hint" aria-live="polite">한글 이름 또는 영문 ID 입력</p>
 </div>
 
-<div id="suggestions" role="listbox" aria-label="검색 후보 목록"></div>
-<div id="result" aria-live="polite" aria-atomic="true"></div>
-<p id="hint" aria-live="polite">한글 이름 또는 영문 ID 입력</p>
+<!-- 출석 체크 뷰 -->
+<div id="attendanceView" style="display:none" aria-label="출석 체크">
+  <div id="attContent" aria-live="polite"></div>
+</div>
 
 <footer><span aria-hidden="true">✈️</span> 2026 제주 미션트립<br>링키지랩</footer>
 
@@ -712,6 +904,10 @@ function showCard(p) {
           <div class="info-item" role="group" aria-label="탑승구"><div class="info-label"><span aria-hidden="true">🚪</span> 탑승구</div><div class="info-value">${val(p.dep_gate)}</div></div>
           <div class="info-item" role="group" aria-label="출발 시간"><div class="info-label"><span aria-hidden="true">⏱</span> 출발 시간</div><div class="info-value">${val(p.dep_time)}</div></div>
         </div>
+        <div class="section-title"><span aria-hidden="true">🏢</span> 카카오 스페이스</div>
+        <div class="info-grid">
+          <div class="info-item full" role="group" aria-label="카카오 투어"><div class="info-label">투어 여부</div><div class="info-value">${val(p.kakao_tour)}</div></div>
+        </div>
       </div>
 
       <div id="day2" class="day-panel ${activeTabId === 'day2' ? 'active' : ''}" role="tabpanel" aria-labelledby="tab-day2">
@@ -782,6 +978,307 @@ function switchDay(btn, panelId) {
 
 // 폰트 크기 초기화 적용
 applyFontSize();
+
+// ── ROSTER_DATA: 스팟별 조 명단 (엑셀 하드코딩) ────────────────
+const ROSTER_DATA = JSON.parse('{"김포공항":{"선발대":{"leader":"bart.11","members":["bart.11","enzo.h"],"colIndex":0},"칸조":{"leader":"kan.k","members":["kan.k","wayne.t","jetty.0130"],"colIndex":1},"멜로니조":{"leader":"melony.h","members":["melony.h","blue.kk"],"colIndex":2},"1조":{"leader":"max.0420","members":["max.0420","jacob.dh","james.42","charlie.yh","hiro.3","patrick.35","wendy.112","layla.1004","polar.09","hazel.j","jennifer.00","rhea.l","eden.m","mia.j"],"colIndex":3},"2조":{"leader":"liam.j","members":["liam.j","conrad.0126","joseph.13","dewey.064","kai.0725","teo.0615","lowell.0704","mari.gold","world.wide","kayla.k","kimi.03","deli.ce","mindy.b","amara.w"],"colIndex":4},"3조":{"leader":"ronnie.l","members":["ronnie.l","vibe.k","jude.0111","jurr.han","adrian.101","dane.0123","jiti.29"],"colIndex":5},"4조":{"leader":"dandel.m","members":["dandel.m","josh.r","nick.0212","noel.99","roy.0528","tony.ab","portia.k","cindy.416","elin.jh"],"colIndex":6},"5조":{"leader":"karen.b","members":["karen.b","peter.431","jane.1013","eloy.j","devin.nadas","poul.k","soul.k","soo.6705","yuli.s","ariel.0317","lily.5965","jini.y","yul.9"],"colIndex":7},"6조":{"leader":"tale.k","members":["tale.k","jena.11","jessie.cho","green.2","rose.es","kevin.s"],"colIndex":8},"7조":{"leader":"mir.20","members":["mir.20","sera.sz","jonadan.0703","antonio.72","arthur.h","silver.5311","moana.j","hans.k","lucas.m","alvin.s","cynthia.1225","damian.25"],"colIndex":9},"8조":{"leader":"chloe.36","members":["chloe.36","ethan.225","nunu.55","ebee.e","jake.219"],"colIndex":10},"9조":{"leader":"julian.link","members":["julian.link","aisha.14","molly.55","janice.08","alex.t","hubert.g","eddy.6","romeo.j","luke.j"],"colIndex":11},"10조":{"leader":"david.0726","members":["david.0726","anne.2","ruby.hy","anver.1130","bob.0903","alexander.p","austin.k"],"colIndex":12},"11조":{"leader":"leo.215","members":["leo.215","miffy.7498","chelsea.0708","juliet.kim","emily.6819","bonita.0909","jason.99","ben.k","kyle.king","ian.0321","victor.p","julu.03"],"colIndex":13},"12조":{"leader":"lola.28","members":["lola.28","jenny.0310","floria.0623","lisa.h","sophy.9908","logan.8","lucky.8322","jackson.14","aron.4121","jb.hong","felix.7"],"colIndex":14},"13조":{"leader":"jamie.4321","members":["jamie.4321","charles.923","nicole.e","kaju.99","sara.c","connie.1120","eva.kim","lyndsey.r","marin.3","asellra.4802"],"colIndex":15},"14조":{"leader":"hayden.kk","members":["hayden.kk","sam.h","swan.s","smile.man","joy.0128","samuel.0614","river.42","tube.c","asher.2017","tori.15"],"colIndex":16},"15조":{"leader":"bella.s","members":["bella.s","hugh.0427","michaela.s","hugo.h","naomi.0218","nova.j","mila.im","bean.3546","stella.l","emma.1","miles.26"],"colIndex":17},"제주항공1":{"leader":"kate.yj","members":["kate.yj","milo.99","lucia.525","dido.2580","erika.1107","lani.on","lina.7513","andy.y","chris.h","annie.0415","cathy.y"],"colIndex":18},"제주항공2":{"leader":"gon.k","members":["gon.k","bruce.pss","happy.00","anna.7","chase.j","hera.v","winter.1","riel.p","cherry.ho","danial.h"],"colIndex":19},"티웨이":{"leader":"ria.21","members":["ria.21","jerry.sy","daisy.0420","mello.12","finn.0727","noah.k","rivo.l","bri.22","selene.l","el.y","sandy.33","yoni.k","jasmine.m","jemma.k","ari.901","elio.93","crystal.xu","heather.seo","limu.9287"],"colIndex":20}},"제주공항":{"선발대":{"leader":"bart.11","members":["bart.11","enzo.h"],"colIndex":0},"칸조":{"leader":"kan.k","members":["kan.k","wayne.t","jetty.0130"],"colIndex":1},"멜로니조":{"leader":"melony.h","members":["melony.h","blue.kk"],"colIndex":2},"1조":{"leader":"max.0420","members":["max.0420","jacob.dh","james.42","charlie.yh","hiro.3","patrick.35","wendy.112","layla.1004","polar.09","hazel.j","jennifer.00","rhea.l","eden.m","mia.j"],"colIndex":3},"2조":{"leader":"liam.j","members":["liam.j","conrad.0126","joseph.13","dewey.064","kai.0725","teo.0615","lowell.0704","mari.gold","world.wide","kayla.k","kimi.03","deli.ce","mindy.b","amara.w"],"colIndex":4},"3조":{"leader":"ronnie.l","members":["ronnie.l","vibe.k","jude.0111","jurr.han","adrian.101","dane.0123","jiti.29"],"colIndex":5},"4조":{"leader":"dandel.m","members":["dandel.m","josh.r","nick.0212","noel.99","roy.0528","tony.ab","portia.k","cindy.416","elin.jh"],"colIndex":6},"5조":{"leader":"karen.b","members":["karen.b","peter.431","jane.1013","eloy.j","devin.nadas","poul.k","soul.k","soo.6705","yuli.s","ariel.0317","lily.5965","jini.y","yul.9"],"colIndex":7},"6조":{"leader":"tale.k","members":["tale.k","jena.11","jessie.cho","green.2","rose.es","kevin.s"],"colIndex":8},"7조":{"leader":"mir.20","members":["mir.20","sera.sz","jonadan.0703","antonio.72","arthur.h","silver.5311","moana.j","hans.k","lucas.m","alvin.s","cynthia.1225","damian.25"],"colIndex":9},"8조":{"leader":"chloe.36","members":["chloe.36","ethan.225","nunu.55","ebee.e","jake.219"],"colIndex":10},"9조":{"leader":"julian.link","members":["julian.link","aisha.14","molly.55","janice.08","alex.t","hubert.g","eddy.6","romeo.j","luke.j"],"colIndex":11},"10조":{"leader":"david.0726","members":["david.0726","anne.2","ruby.hy","anver.1130","bob.0903","alexander.p","austin.k"],"colIndex":12},"11조":{"leader":"leo.215","members":["leo.215","miffy.7498","chelsea.0708","juliet.kim","emily.6819","bonita.0909","jason.99","ben.k","kyle.king","ian.0321","victor.p","julu.03"],"colIndex":13},"12조":{"leader":"lola.28","members":["lola.28","jenny.0310","floria.0623","lisa.h","sophy.9908","logan.8","lucky.8322","jackson.14","aron.4121","jb.hong","felix.7"],"colIndex":14},"13조":{"leader":"jamie.4321","members":["jamie.4321","charles.923","nicole.e","kaju.99","sara.c","connie.1120","eva.kim","lyndsey.r","marin.3","asellra.4802"],"colIndex":15},"14조":{"leader":"hayden.kk","members":["hayden.kk","sam.h","swan.s","smile.man","joy.0128","samuel.0614","river.42","tube.c","asher.2017","tori.15"],"colIndex":16},"15조":{"leader":"bella.s","members":["bella.s","hugh.0427","michaela.s","hugo.h","naomi.0218","nova.j","mila.im","bean.3546","stella.l","emma.1","miles.26"],"colIndex":17},"제주항공1":{"leader":"kate.yj","members":["kate.yj","milo.99","lucia.525","dido.2580","erika.1107","lani.on","lina.7513","andy.y","chris.h","annie.0415","cathy.y"],"colIndex":18},"제주항공2":{"leader":"gon.k","members":["gon.k","bruce.pss","happy.00","anna.7","chase.j","hera.v","winter.1","riel.p","cherry.ho","danial.h"],"colIndex":19},"티웨이":{"leader":"ria.21","members":["ria.21","jerry.sy","daisy.0420","mello.12","finn.0727","noah.k","rivo.l","bri.22","selene.l","el.y","sandy.33","yoni.k","jasmine.m","jemma.k","ari.901","elio.93","crystal.xu","heather.seo","limu.9287"],"colIndex":20}},"카카오":{"선발대":{"leader":"bart.11","members":["bart.11","enzo.h"],"colIndex":0},"칸조":{"leader":"kan.k","members":["kan.k","wayne.t","jetty.0130"],"colIndex":1},"멜로니조":{"leader":"melony.h","members":["melony.h","blue.kk"],"colIndex":2},"1조":{"leader":"max.0420","members":["max.0420","jacob.dh","james.42","charlie.yh","hiro.3","patrick.35","wendy.112","layla.1004","polar.09","hazel.j","jennifer.00","rhea.l","eden.m","mia.j"],"colIndex":3},"2조":{"leader":"liam.j","members":["liam.j","conrad.0126","joseph.13","dewey.064","kai.0725","teo.0615","lowell.0704","mari.gold","world.wide","kayla.k","kimi.03","deli.ce","mindy.b","amara.w"],"colIndex":4},"3조":{"leader":"ronnie.l","members":["ronnie.l","vibe.k","jude.0111","jurr.han","adrian.101","dane.0123","jiti.29"],"colIndex":5},"4조":{"leader":"dandel.m","members":["dandel.m","josh.r","nick.0212","noel.99","roy.0528","tony.ab","portia.k","cindy.416","elin.jh"],"colIndex":6},"5조":{"leader":"karen.b","members":["karen.b","peter.431","jane.1013","eloy.j","devin.nadas","poul.k","soul.k","soo.6705","yuli.s","ariel.0317","lily.5965","jini.y","yul.9"],"colIndex":7},"6조":{"leader":"tale.k","members":["tale.k","jena.11","jessie.cho","green.2","rose.es","kevin.s"],"colIndex":8},"7조":{"leader":"mir.20","members":["mir.20","jonadan.0703","antonio.72","arthur.h","silver.5311","moana.j","hans.k","lucas.m","alvin.s","cynthia.1225","damian.25"],"colIndex":9},"8조":{"leader":"chloe.36","members":["chloe.36","ethan.225","nunu.55","ebee.e","jake.219","david.0726"],"colIndex":10},"9조":{"leader":"julian.link","members":["julian.link","aisha.14","molly.55","janice.08","alex.t","hubert.g","eddy.6","romeo.j","luke.j"],"colIndex":11},"10조":{"leader":"sera.sz","members":["sera.sz","anne.2","ruby.hy","anver.1130","bob.0903","alexander.p","austin.k","wittgen.1","yuki.03"],"colIndex":12},"11조":{"leader":"leo.215","members":["leo.215","miffy.7498","chelsea.0708","juliet.kim","emily.6819","bonita.0909","jason.99","ben.k","kyle.king","ian.0321","victor.p","julu.03"],"colIndex":13},"12조":{"leader":"lola.28","members":["lola.28","jenny.0310","floria.0623","lisa.h","sophy.9908","logan.8","lucky.8322","jackson.14","aron.4121","jb.hong","felix.7"],"colIndex":14},"13조":{"leader":"jamie.4321","members":["jamie.4321","charles.923","nicole.e","kaju.99","sara.c","connie.1120","eva.kim","lyndsey.r","marin.3","asellra.4802"],"colIndex":15},"14조":{"leader":"hayden.kk","members":["hayden.kk","sam.h","swan.s","smile.man","joy.0128","samuel.0614","river.42","tube.c","asher.2017","tori.15"],"colIndex":16},"15조":{"leader":"bella.s","members":["bella.s","hugh.0427","michaela.s","hugo.h","naomi.0218","nova.j","mila.im","bean.3546","stella.l","emma.1","miles.26"],"colIndex":17},"제주항공1":{"leader":"kate.yj","members":["kate.yj","milo.99","lucia.525","dido.2580","erika.1107","lani.on","lina.7513","andy.y","chris.h","annie.0415","cathy.y"],"colIndex":18},"제주항공2":{"leader":"gon.k","members":["gon.k","bruce.pss","happy.00","anna.7","chase.j","hera.v","winter.1","riel.p","cherry.ho","danial.h"],"colIndex":19},"티웨이":{"leader":"ria.21","members":["ria.21","jerry.sy","daisy.0420","mello.12","finn.0727","noah.k","rivo.l","bri.22","selene.l","el.y","sandy.33","yoni.k","jasmine.m","jemma.k","ari.901","elio.93","crystal.xu","heather.seo","limu.9287"],"colIndex":20}},"난타공연장":{"선발대":{"leader":"bart.11","members":["bart.11","enzo.h"],"colIndex":0},"칸조":{"leader":"kan.k","members":["kan.k","wayne.t","jetty.0130"],"colIndex":1},"멜로니조":{"leader":"melony.h","members":["melony.h","blue.kk","cathy.y"],"colIndex":2},"1조":{"leader":"max.0420","members":["max.0420","jacob.dh","james.42","charlie.yh","hiro.3","patrick.35","wendy.112","layla.1004","polar.09","hazel.j","jennifer.00","rhea.l","eden.m","mia.j"],"colIndex":3},"2조":{"leader":"liam.j","members":["liam.j","conrad.0126","joseph.13","dewey.064","kai.0725","teo.0615","lowell.0704","mari.gold","world.wide","kayla.k","kimi.03","deli.ce","mindy.b","amara.w"],"colIndex":4},"3조":{"leader":"kate.yj","members":["kate.yj","ronnie.l","vibe.k","jude.0111","jurr.han","adrian.101","dane.0123","jiti.29","milo.99","lucia.525","dido.2580","erika.1107","lani.on","lina.7513"],"colIndex":5},"4조":{"leader":"dandel.m","members":["dandel.m","josh.r","nick.0212","noel.99","roy.0528","tony.ab","portia.k","cindy.416","elin.jh","andy.y","chris.h","annie.0415"],"colIndex":6},"5조":{"leader":"karen.b","members":["karen.b","peter.431","jane.1013","eloy.j","devin.nadas","poul.k","soul.k","soo.6705","yuli.s","ariel.0317","lily.5965","jini.y","yul.9","gon.k"],"colIndex":7},"6조":{"leader":"tale.k","members":["tale.k","jena.11","jessie.cho","green.2","bruce.pss","happy.00","anna.7","chase.j","hera.v","winter.1","riel.p","cherry.ho","danial.h"],"colIndex":8},"7조":{"leader":"mir.20","members":["mir.20","sera.sz","jonadan.0703","antonio.72","arthur.h","silver.5311","moana.j","hans.k","lucas.m","alvin.s","cynthia.1225","damian.25"],"colIndex":9},"8조":{"leader":"chloe.36","members":["chloe.36","ethan.225","nunu.55","ebee.e","jake.219"],"colIndex":10},"9조":{"leader":"julian.link","members":["julian.link","aisha.14","molly.55","janice.08","alex.t","hubert.g","eddy.6","romeo.j","luke.j"],"colIndex":11},"10조":{"leader":"david.0726","members":["david.0726","anne.2","ruby.hy","anver.1130","bob.0903","alexander.p","austin.k","wittgen.1","yuki.03"],"colIndex":12},"11조":{"leader":"leo.215","members":["leo.215","miffy.7498","chelsea.0708","juliet.kim","emily.6819","bonita.0909","jason.99","ben.k","kyle.king","ian.0321","victor.p","julu.03"],"colIndex":13},"12조":{"leader":"lola.28","members":["lola.28","jenny.0310","floria.0623","lisa.h","sophy.9908","logan.8","lucky.8322","jackson.14","aron.4121","jb.hong","felix.7"],"colIndex":14},"13조":{"leader":"jamie.4321","members":["jamie.4321","charles.923","nicole.e","kaju.99","sara.c","connie.1120","eva.kim","lyndsey.r","marin.3","asellra.4802"],"colIndex":15},"14조":{"leader":"hayden.kk","members":["hayden.kk","sam.h","swan.s","smile.man","joy.0128","samuel.0614","river.42","tube.c","asher.2017","tori.15"],"colIndex":16},"15조":{"leader":"bella.s","members":["bella.s","hugh.0427","michaela.s","hugo.h","naomi.0218","nova.j","mila.im","bean.3546","stella.l","emma.1","miles.26"],"colIndex":17},"티웨이":{"leader":"ria.21","members":["ria.21","jerry.sy","daisy.0420","mello.12","finn.0727","noah.k","rivo.l","bri.22","selene.l","el.y","sandy.33","yoni.k","jasmine.m","jemma.k","ari.901","elio.93","crystal.xu","heather.seo","limu.9287"],"colIndex":18}},"포도원":{"선발대":{"leader":"bart.11","members":["bart.11","enzo.h","yul.9"],"colIndex":0},"칸조":{"leader":"kan.k","members":["kan.k","wayne.t","jetty.0130"],"colIndex":1},"멜로니조":{"leader":"melony.h","members":["melony.h","blue.kk","cathy.y"],"colIndex":2},"1조":{"leader":"max.0420","members":["max.0420","jacob.dh","james.42","charlie.yh","hiro.3","patrick.35","wendy.112","layla.1004","polar.09","hazel.j","jennifer.00","rhea.l","eden.m","mia.j"],"colIndex":3},"2조":{"leader":"liam.j","members":["liam.j","conrad.0126","joseph.13","dewey.064","kai.0725","teo.0615","lowell.0704","mari.gold","world.wide","kayla.k","kimi.03","deli.ce","mindy.b","amara.w"],"colIndex":4},"3조":{"leader":"kate.yj","members":["kate.yj","ronnie.l","vibe.k","jude.0111","jurr.han","adrian.101","dane.0123","jiti.29","milo.99","lucia.525","dido.2580","erika.1107","lani.on","lina.7513"],"colIndex":5},"4조":{"leader":"dandel.m","members":["dandel.m","josh.r","nick.0212","noel.99","roy.0528","tony.ab","portia.k","cindy.416","elin.jh","andy.y","chris.h","annie.0415"],"colIndex":6},"5조":{"leader":"karen.b","members":["karen.b","peter.431","jane.1013","eloy.j","devin.nadas","poul.k","soul.k","soo.6705","yuli.s","ariel.0317","lily.5965","jini.y","gon.k"],"colIndex":7},"6조":{"leader":"tale.k","members":["tale.k","jena.11","jessie.cho","green.2","bruce.pss","happy.00","anna.7","chase.j","hera.v","winter.1","riel.p","cherry.ho","danial.h"],"colIndex":8},"7조":{"leader":"mir.20","members":["mir.20","sera.sz","jonadan.0703","antonio.72","arthur.h","silver.5311","moana.j","hans.k","lucas.m","alvin.s","cynthia.1225","damian.25"],"colIndex":9},"8조":{"leader":"chloe.36","members":["chloe.36","ethan.225","nunu.55","ebee.e","jake.219"],"colIndex":10},"9조":{"leader":"julian.link","members":["julian.link","aisha.14","molly.55","janice.08","alex.t","hubert.g","eddy.6","romeo.j","luke.j"],"colIndex":11},"10조":{"leader":"david.0726","members":["david.0726","anne.2","ruby.hy","anver.1130","bob.0903","alexander.p","austin.k","wittgen.1","yuki.03"],"colIndex":12},"11조":{"leader":"leo.215","members":["leo.215","miffy.7498","chelsea.0708","juliet.kim","emily.6819","bonita.0909","jason.99","ben.k","kyle.king","ian.0321","victor.p","julu.03"],"colIndex":13},"12조":{"leader":"lola.28","members":["lola.28","jenny.0310","floria.0623","lisa.h","sophy.9908","logan.8","lucky.8322","jackson.14","aron.4121","jb.hong","felix.7"],"colIndex":14},"13조":{"leader":"jamie.4321","members":["jamie.4321","charles.923","nicole.e","kaju.99","sara.c","connie.1120","eva.kim","lyndsey.r","marin.3","asellra.4802"],"colIndex":15},"14조":{"leader":"hayden.kk","members":["hayden.kk","sam.h","swan.s","smile.man","joy.0128","samuel.0614","river.42","tube.c","asher.2017","tori.15"],"colIndex":16},"15조":{"leader":"bella.s","members":["bella.s","hugh.0427","michaela.s","hugo.h","naomi.0218","nova.j","mila.im","bean.3546","stella.l","emma.1","miles.26"],"colIndex":17},"티웨이":{"leader":"ria.21","members":["ria.21","jerry.sy","daisy.0420","mello.12","finn.0727","noah.k","rivo.l","bri.22","selene.l","el.y","sandy.33","yoni.k","jasmine.m","jemma.k","ari.901","elio.93","crystal.xu","heather.seo","limu.9287"],"colIndex":18}},"체크인":{"선발대":{"leader":"bart.11","members":["bart.11","enzo.h","yul.9"],"colIndex":0},"칸조":{"leader":"kan.k","members":["kan.k","wayne.t","jetty.0130"],"colIndex":1},"멜로니조":{"leader":"melony.h","members":["melony.h","blue.kk","cathy.y"],"colIndex":2},"1조":{"leader":"max.0420","members":["max.0420","jacob.dh","james.42","charlie.yh","hiro.3","patrick.35","wendy.112","layla.1004","polar.09","hazel.j","jennifer.00","rhea.l","eden.m","mia.j"],"colIndex":3},"2조":{"leader":"liam.j","members":["liam.j","conrad.0126","joseph.13","dewey.064","kai.0725","teo.0615","lowell.0704","mari.gold","world.wide","kayla.k","kimi.03","deli.ce","mindy.b","amara.w"],"colIndex":4},"3조":{"leader":"kate.yj","members":["kate.yj","ronnie.l","vibe.k","jude.0111","jurr.han","adrian.101","dane.0123","jiti.29","milo.99","lucia.525","dido.2580","erika.1107","lani.on","lina.7513"],"colIndex":5},"4조":{"leader":"dandel.m","members":["dandel.m","josh.r","nick.0212","noel.99","roy.0528","tony.ab","portia.k","cindy.416","elin.jh","andy.y","chris.h","annie.0415"],"colIndex":6},"5조":{"leader":"karen.b","members":["karen.b","peter.431","jane.1013","eloy.j","devin.nadas","poul.k","soul.k","soo.6705","yuli.s","ariel.0317","lily.5965","jini.y","gon.k"],"colIndex":7},"6조":{"leader":"tale.k","members":["tale.k","jena.11","jessie.cho","green.2","bruce.pss","happy.00","anna.7","chase.j","hera.v","winter.1","riel.p","cherry.ho","danial.h"],"colIndex":8},"7조":{"leader":"mir.20","members":["mir.20","sera.sz","jonadan.0703","antonio.72","arthur.h","silver.5311","moana.j","hans.k","lucas.m","alvin.s","cynthia.1225","damian.25"],"colIndex":9},"8조":{"leader":"chloe.36","members":["chloe.36","ethan.225","nunu.55","ebee.e","jake.219"],"colIndex":10},"9조":{"leader":"julian.link","members":["julian.link","aisha.14","molly.55","janice.08","alex.t","hubert.g","eddy.6","romeo.j","luke.j"],"colIndex":11},"10조":{"leader":"david.0726","members":["david.0726","anne.2","ruby.hy","anver.1130","bob.0903","alexander.p","austin.k","wittgen.1","yuki.03"],"colIndex":12},"11조":{"leader":"leo.215","members":["leo.215","miffy.7498","chelsea.0708","juliet.kim","emily.6819","bonita.0909","jason.99","ben.k","kyle.king","ian.0321","victor.p","julu.03"],"colIndex":13},"12조":{"leader":"lola.28","members":["lola.28","jenny.0310","floria.0623","lisa.h","sophy.9908","logan.8","lucky.8322","jackson.14","aron.4121","jb.hong","felix.7"],"colIndex":14},"13조":{"leader":"jamie.4321","members":["jamie.4321","charles.923","nicole.e","kaju.99","sara.c","connie.1120","eva.kim","lyndsey.r","marin.3","asellra.4802"],"colIndex":15},"14조":{"leader":"hayden.kk","members":["hayden.kk","sam.h","swan.s","smile.man","joy.0128","samuel.0614","river.42","tube.c","asher.2017","tori.15"],"colIndex":16},"15조":{"leader":"bella.s","members":["bella.s","hugh.0427","michaela.s","hugo.h","naomi.0218","nova.j","mila.im","bean.3546","stella.l","emma.1","miles.26"],"colIndex":17},"티웨이":{"leader":"ria.21","members":["ria.21","jerry.sy","daisy.0420","mello.12","finn.0727","noah.k","rivo.l","bri.22","selene.l","el.y","sandy.33","yoni.k","jasmine.m","jemma.k","ari.901","elio.93","crystal.xu","heather.seo","limu.9287"],"colIndex":18}},"하효마을":{"선발대":{"leader":"bart.11","members":["bart.11","enzo.h","lola.28","crystal.xu"],"colIndex":0},"칸조":{"leader":"kan.k","members":["kan.k","wayne.t","jetty.0130"],"colIndex":1},"멜로니조":{"leader":"melony.h","members":["melony.h","blue.kk","cathy.y"],"colIndex":2},"1조":{"leader":"max.0420","members":["max.0420","jacob.dh","james.42","charlie.yh","hiro.3","patrick.35","wendy.112","layla.1004","polar.09","hazel.j","jennifer.00","rhea.l","eden.m","mia.j"],"colIndex":3},"2조":{"leader":"liam.j","members":["liam.j","conrad.0126","joseph.13","dewey.064","kai.0725","teo.0615","lowell.0704","mari.gold","world.wide","kayla.k","kimi.03","deli.ce","mindy.b","amara.w"],"colIndex":4},"3조":{"leader":"kate.yj","members":["kate.yj","ronnie.l","vibe.k","jude.0111","jurr.han","adrian.101","dane.0123","jiti.29","milo.99","lucia.525","erika.1107","lani.on","lina.7513","dido.2580"],"colIndex":5},"4조":{"leader":"dandel.m","members":["dandel.m","josh.r","nick.0212","noel.99","roy.0528","tony.ab","portia.k","cindy.416","elin.jh","andy.y","chris.h","annie.0415"],"colIndex":6},"5조":{"leader":"karen.b","members":["karen.b","peter.431","jane.1013","eloy.j","devin.nadas","poul.k","soul.k","soo.6705","yuli.s","ariel.0317","lily.5965","jini.y","yul.9","gon.k"],"colIndex":7},"6조":{"leader":"tale.k","members":["tale.k","jena.11","jessie.cho","happy.00","chase.j","hera.v","winter.1","riel.p","cherry.ho","danial.h","heather.seo","limu.9287","rose.es","kevin.s","green.2"],"colIndex":8},"7조":{"leader":"mir.20","members":["mir.20","sera.sz","jonadan.0703","antonio.72","arthur.h","silver.5311","moana.j","hans.k","lucas.m","alvin.s","cynthia.1225","damian.25"],"colIndex":9},"8조":{"leader":"chloe.36","members":["chloe.36","ethan.225","nunu.55","julian.link","david.0726","leo.215","ebee.e","jake.219"],"colIndex":10},"9조":{"leader":"ria.21","members":["ria.21","aisha.14","molly.55","janice.08","alex.t","hubert.g","eddy.6","romeo.j","luke.j","mello.12","finn.0727","noah.k"],"colIndex":11},"10조":{"leader":"daisy.0420","members":["daisy.0420","anne.2","ruby.hy","anver.1130","bob.0903","alexander.p","austin.k","wittgen.1","yuki.03","rivo.l","bri.22","selene.l"],"colIndex":12},"11조":{"leader":"jerry.sy","members":["jerry.sy","miffy.7498","chelsea.0708","juliet.kim","emily.6819","bonita.0909","jason.99","ben.k","kyle.king","ian.0321","victor.p","julu.03","el.y","sandy.33","yoni.k"],"colIndex":13},"12조":{"leader":"jasmine.m","members":["jasmine.m","jenny.0310","floria.0623","lisa.h","sophy.9908","logan.8","lucky.8322","jackson.14","aron.4121","jb.hong","felix.7","jemma.k","ari.901","elio.93"],"colIndex":14},"13조":{"leader":"jamie.4321","members":["jamie.4321","charles.923","nicole.e","kaju.99","sara.c","connie.1120","eva.kim","lyndsey.r","marin.3","asellra.4802"],"colIndex":15},"14조":{"leader":"hayden.kk","members":["hayden.kk","sam.h","swan.s","smile.man","joy.0128","samuel.0614","river.42","tube.c","asher.2017","tori.15"],"colIndex":16},"15조":{"leader":"bella.s","members":["bella.s","hugh.0427","michaela.s","hugo.h","naomi.0218","nova.j","mila.im","bean.3546","stella.l","emma.1","miles.26"],"colIndex":17}},"더클리프":{"선발대":{"leader":"bart.11","members":["bart.11","enzo.h","lola.28","crystal.xu"],"colIndex":0},"칸조":{"leader":"kan.k","members":["kan.k","wayne.t","jetty.0130"],"colIndex":1},"멜로니조":{"leader":"melony.h","members":["melony.h","blue.kk","cathy.y"],"colIndex":2},"1조":{"leader":"max.0420","members":["max.0420","jacob.dh","james.42","charlie.yh","hiro.3","patrick.35","wendy.112","layla.1004","polar.09","hazel.j","jennifer.00","rhea.l","eden.m","mia.j"],"colIndex":3},"2조":{"leader":"liam.j","members":["liam.j","conrad.0126","joseph.13","dewey.064","kai.0725","teo.0615","lowell.0704","mari.gold","world.wide","kayla.k","kimi.03","deli.ce","mindy.b","amara.w"],"colIndex":4},"3조":{"leader":"kate.yj","members":["kate.yj","ronnie.l","vibe.k","jude.0111","jurr.han","adrian.101","dane.0123","jiti.29","milo.99","lucia.525","erika.1107","lani.on","lina.7513"],"colIndex":5},"4조":{"leader":"dandel.m","members":["dandel.m","josh.r","nick.0212","noel.99","roy.0528","tony.ab","portia.k","cindy.416","elin.jh","andy.y","chris.h","annie.0415"],"colIndex":6},"5조":{"leader":"karen.b","members":["karen.b","peter.431","jane.1013","eloy.j","devin.nadas","poul.k","soul.k","soo.6705","yuli.s","ariel.0317","lily.5965","jini.y","yul.9"],"colIndex":7},"6조":{"leader":"tale.k","members":["tale.k","jena.11","jessie.cho","happy.00","chase.j","hera.v","winter.1","riel.p","cherry.ho","danial.h","heather.seo","limu.9287","rose.es","kevin.s"],"colIndex":8},"7조":{"leader":"mir.20","members":["mir.20","sera.sz","jonadan.0703","antonio.72","arthur.h","silver.5311","moana.j","hans.k","lucas.m","alvin.s","cynthia.1225","damian.25"],"colIndex":9},"8조":{"leader":"chloe.36","members":["chloe.36","ethan.225","nunu.55","julian.link","david.0726","leo.215","ebee.e","jake.219"],"colIndex":10},"9조":{"leader":"ria.21","members":["ria.21","aisha.14","molly.55","janice.08","alex.t","hubert.g","eddy.6","romeo.j","luke.j","mello.12","finn.0727","noah.k"],"colIndex":11},"10조":{"leader":"daisy.0420","members":["daisy.0420","anne.2","ruby.hy","anver.1130","bob.0903","alexander.p","austin.k","wittgen.1","yuki.03","rivo.l","bri.22","selene.l"],"colIndex":12},"11조":{"leader":"jerry.sy","members":["jerry.sy","miffy.7498","chelsea.0708","juliet.kim","emily.6819","bonita.0909","jason.99","ben.k","kyle.king","ian.0321","victor.p","julu.03","el.y","sandy.33","yoni.k"],"colIndex":13},"12조":{"leader":"jasmine.m","members":["jasmine.m","jenny.0310","floria.0623","lisa.h","sophy.9908","logan.8","lucky.8322","jackson.14","aron.4121","jb.hong","felix.7","jemma.k","ari.901","elio.93"],"colIndex":14},"13조":{"leader":"jamie.4321","members":["jamie.4321","charles.923","nicole.e","kaju.99","sara.c","connie.1120","eva.kim","lyndsey.r","marin.3","asellra.4802"],"colIndex":15},"14조":{"leader":"hayden.kk","members":["hayden.kk","sam.h","swan.s","smile.man","joy.0128","samuel.0614","river.42","tube.c","asher.2017","tori.15"],"colIndex":16},"15조":{"leader":"bella.s","members":["bella.s","hugh.0427","michaela.s","hugo.h","naomi.0218","nova.j","mila.im","bean.3546","stella.l","emma.1","miles.26"],"colIndex":17}},"메인행사":{"선발대":{"leader":"bart.11","members":["bart.11","enzo.h","lola.28","crystal.xu"],"colIndex":0},"칸조":{"leader":"kan.k","members":["kan.k","wayne.t","jetty.0130"],"colIndex":1},"멜로니조":{"leader":"melony.h","members":["melony.h","blue.kk","cathy.y"],"colIndex":2},"1조":{"leader":"max.0420","members":["max.0420","jacob.dh","james.42","charlie.yh","hiro.3","patrick.35","wendy.112","layla.1004","polar.09","hazel.j","jennifer.00","rhea.l","eden.m","mia.j"],"colIndex":3},"2조":{"leader":"liam.j","members":["liam.j","conrad.0126","joseph.13","dewey.064","kai.0725","teo.0615","lowell.0704","mari.gold","world.wide","kayla.k","kimi.03","deli.ce","mindy.b","amara.w"],"colIndex":4},"3조":{"leader":"kate.yj","members":["kate.yj","ronnie.l","vibe.k","jude.0111","jurr.han","adrian.101","dane.0123","jiti.29","milo.99","erika.1107","lani.on","lina.7513"],"colIndex":5},"4조":{"leader":"josh.r","members":["josh.r","nick.0212","noel.99","roy.0528","tony.ab","portia.k","cindy.416","elin.jh","andy.y","chris.h","annie.0415"],"colIndex":6},"5조":{"leader":"karen.b","members":["karen.b","peter.431","jane.1013","eloy.j","devin.nadas","poul.k","soul.k","soo.6705","yuli.s","ariel.0317","lily.5965","jini.y","yul.9"],"colIndex":7},"6조":{"leader":"tale.k","members":["tale.k","jena.11","jessie.cho","happy.00","chase.j","hera.v","winter.1","riel.p","cherry.ho","danial.h","heather.seo","limu.9287","rose.es","kevin.s","bruce.pss","anna.7"],"colIndex":8},"7조":{"leader":"mir.20","members":["mir.20","sera.sz","jonadan.0703","antonio.72","arthur.h","silver.5311","moana.j","hans.k","lucas.m","alvin.s","cynthia.1225","damian.25"],"colIndex":9},"8조":{"leader":"chloe.36","members":["chloe.36","ethan.225","nunu.55","julian.link","david.0726","leo.215","ebee.e","jake.219"],"colIndex":10},"9조":{"leader":"ria.21","members":["ria.21","aisha.14","molly.55","janice.08","alex.t","hubert.g","eddy.6","romeo.j","luke.j","mello.12","finn.0727","noah.k"],"colIndex":11},"10조":{"leader":"daisy.0420","members":["daisy.0420","anne.2","ruby.hy","anver.1130","bob.0903","alexander.p","austin.k","wittgen.1","yuki.03","rivo.l","bri.22","selene.l"],"colIndex":12},"11조":{"leader":"jerry.sy","members":["jerry.sy","miffy.7498","chelsea.0708","juliet.kim","emily.6819","bonita.0909","jason.99","ben.k","kyle.king","ian.0321","victor.p","julu.03","el.y","sandy.33","yoni.k"],"colIndex":13},"12조":{"leader":"jasmine.m","members":["jasmine.m","jenny.0310","floria.0623","lisa.h","sophy.9908","logan.8","lucky.8322","jackson.14","aron.4121","jb.hong","felix.7","jemma.k","ari.901","elio.93"],"colIndex":14},"13조":{"leader":"jamie.4321","members":["jamie.4321","charles.923","nicole.e","kaju.99","sara.c","connie.1120","eva.kim","lyndsey.r","marin.3","asellra.4802"],"colIndex":15},"14조":{"leader":"hayden.kk","members":["hayden.kk","sam.h","swan.s","smile.man","joy.0128","samuel.0614","river.42","tube.c","asher.2017","tori.15"],"colIndex":16},"15조":{"leader":"bella.s","members":["bella.s","hugh.0427","michaela.s","hugo.h","naomi.0218","nova.j","mila.im","bean.3546","stella.l","emma.1","miles.26"],"colIndex":17}},"치유의숲":{"선발대":{"leader":"bart.11","members":["bart.11","enzo.h","lola.28","crystal.xu"],"colIndex":0},"칸조":{"leader":"kan.k","members":["kan.k","wayne.t","jetty.0130"],"colIndex":1},"멜로니조":{"leader":"melony.h","members":["melony.h","blue.kk","cathy.y"],"colIndex":2},"1조":{"leader":"max.0420","members":["max.0420","jacob.dh","james.42","charlie.yh","hiro.3","patrick.35","wendy.112","layla.1004","polar.09","hazel.j","jennifer.00","rhea.l","eden.m","mia.j"],"colIndex":3},"2조":{"leader":"liam.j","members":["liam.j","conrad.0126","joseph.13","dewey.064","kai.0725","teo.0615","lowell.0704","mari.gold","world.wide","kayla.k","kimi.03","deli.ce","mindy.b","amara.w"],"colIndex":4},"3조":{"leader":"kate.yj","members":["kate.yj","ronnie.l","vibe.k","jude.0111","jurr.han","adrian.101","dane.0123","jiti.29","milo.99","lucia.525","dido.2580","erika.1107","lani.on","lina.7513"],"colIndex":5},"4조":{"leader":"dandel.m","members":["dandel.m","josh.r","nick.0212","noel.99","roy.0528","tony.ab","portia.k","cindy.416","elin.jh","andy.y","chris.h","annie.0415"],"colIndex":6},"5조":{"leader":"karen.b","members":["karen.b","peter.431","jane.1013","eloy.j","devin.nadas","poul.k","soul.k","soo.6705","yuli.s","ariel.0317","lily.5965","jini.y","yul.9","gon.k"],"colIndex":7},"6조":{"leader":"tale.k","members":["tale.k","jena.11","jessie.cho","green.2","winter.1","riel.p","cherry.ho","danial.h","limu.9287","rose.es","kevin.s"],"colIndex":8},"7조":{"leader":"mir.20","members":["mir.20","sera.sz","jonadan.0703","antonio.72","arthur.h","silver.5311","moana.j","hans.k","lucas.m","alvin.s","cynthia.1225","damian.25"],"colIndex":9},"8조":{"leader":"chloe.36","members":["chloe.36","ethan.225","nunu.55","david.0726","leo.215","ebee.e","jake.219"],"colIndex":10},"9조":{"leader":"ria.21","members":["ria.21","aisha.14","molly.55","janice.08","alex.t","hubert.g","eddy.6","romeo.j","luke.j","mello.12","finn.0727","noah.k"],"colIndex":11},"10조":{"leader":"daisy.0420","members":["daisy.0420","anne.2","ruby.hy","anver.1130","bob.0903","alexander.p","austin.k","wittgen.1","yuki.03","rivo.l","bri.22","selene.l"],"colIndex":12},"11조":{"leader":"jerry.sy","members":["jerry.sy","miffy.7498","chelsea.0708","juliet.kim","emily.6819","bonita.0909","jason.99","ben.k","kyle.king","ian.0321","victor.p","julu.03","el.y","sandy.33","yoni.k"],"colIndex":13},"12조":{"leader":"jasmine.m","members":["jasmine.m","jenny.0310","floria.0623","lisa.h","sophy.9908","logan.8","lucky.8322","jackson.14","aron.4121","jb.hong","felix.7","jemma.k","ari.901","elio.93"],"colIndex":14},"13조":{"leader":"jamie.4321","members":["jamie.4321","charles.923","nicole.e","kaju.99","sara.c","connie.1120","eva.kim","lyndsey.r","marin.3","asellra.4802","julian.link"],"colIndex":15},"14조":{"leader":"hayden.kk","members":["hayden.kk","sam.h","swan.s","smile.man","joy.0128","samuel.0614","river.42","tube.c","asher.2017","tori.15"],"colIndex":16},"15조":{"leader":"bella.s","members":["bella.s","hugh.0427","michaela.s","hugo.h","naomi.0218","nova.j","mila.im","bean.3546","stella.l","emma.1","miles.26"],"colIndex":17}},"고등어쌈밥":{"선발대":{"leader":"bart.11","members":["bart.11","enzo.h","lola.28","crystal.xu"],"colIndex":0},"칸조":{"leader":"kan.k","members":["kan.k","wayne.t","jetty.0130"],"colIndex":1},"멜로니조":{"leader":"melony.h","members":["melony.h","blue.kk","cathy.y"],"colIndex":2},"1조":{"leader":"max.0420","members":["max.0420","jacob.dh","james.42","charlie.yh","hiro.3","patrick.35","wendy.112","layla.1004","polar.09","hazel.j","jennifer.00","rhea.l","eden.m","mia.j"],"colIndex":3},"2조":{"leader":"liam.j","members":["liam.j","conrad.0126","joseph.13","dewey.064","kai.0725","teo.0615","lowell.0704","mari.gold","world.wide","kayla.k","kimi.03","deli.ce","mindy.b","amara.w"],"colIndex":4},"3조":{"leader":"kate.yj","members":["kate.yj","ronnie.l","vibe.k","jude.0111","jurr.han","adrian.101","dane.0123","jiti.29","milo.99","lucia.525","dido.2580","erika.1107","lani.on","lina.7513"],"colIndex":5},"4조":{"leader":"dandel.m","members":["dandel.m","josh.r","nick.0212","noel.99","roy.0528","tony.ab","portia.k","cindy.416","elin.jh","andy.y","chris.h","annie.0415"],"colIndex":6},"5조":{"leader":"karen.b","members":["karen.b","peter.431","jane.1013","eloy.j","devin.nadas","poul.k","soul.k","soo.6705","yuli.s","ariel.0317","lily.5965","jini.y","yul.9","gon.k"],"colIndex":7},"6조":{"leader":"tale.k","members":["tale.k","jena.11","jessie.cho","green.2","winter.1","riel.p","cherry.ho","danial.h","limu.9287","rose.es","kevin.s","heather.seo","happy.00"],"colIndex":8},"7조":{"leader":"mir.20","members":["mir.20","sera.sz","jonadan.0703","antonio.72","arthur.h","silver.5311","moana.j","hans.k","lucas.m","alvin.s","cynthia.1225","damian.25"],"colIndex":9},"8조":{"leader":"chloe.36","members":["chloe.36","ethan.225","nunu.55","david.0726","leo.215","ebee.e","jake.219"],"colIndex":10},"9조":{"leader":"ria.21","members":["ria.21","aisha.14","molly.55","janice.08","alex.t","hubert.g","eddy.6","romeo.j","luke.j","mello.12","finn.0727","noah.k"],"colIndex":11},"10조":{"leader":"daisy.0420","members":["daisy.0420","anne.2","ruby.hy","anver.1130","bob.0903","alexander.p","austin.k","wittgen.1","yuki.03","rivo.l","bri.22","selene.l"],"colIndex":12},"11조":{"leader":"jerry.sy","members":["jerry.sy","miffy.7498","chelsea.0708","juliet.kim","emily.6819","bonita.0909","jason.99","ben.k","kyle.king","ian.0321","victor.p","julu.03","el.y","sandy.33","yoni.k"],"colIndex":13},"12조":{"leader":"jasmine.m","members":["jasmine.m","jenny.0310","floria.0623","lisa.h","sophy.9908","logan.8","lucky.8322","jackson.14","aron.4121","jb.hong","felix.7","jemma.k","ari.901","elio.93"],"colIndex":14},"13조":{"leader":"jamie.4321","members":["jamie.4321","charles.923","nicole.e","kaju.99","sara.c","connie.1120","eva.kim","lyndsey.r","marin.3","asellra.4802","julian.link"],"colIndex":15},"14조":{"leader":"hayden.kk","members":["hayden.kk","sam.h","swan.s","smile.man","joy.0128","samuel.0614","river.42","tube.c","asher.2017","tori.15"],"colIndex":16},"15조":{"leader":"bella.s","members":["bella.s","hugh.0427","michaela.s","hugo.h","naomi.0218","nova.j","mila.im","bean.3546","stella.l","emma.1","miles.26"],"colIndex":17}},"제주공항+김포공항":{"칸조":{"leader":"kan.k","members":["kan.k","wayne.t","jetty.0130"],"colIndex":1},"멜로니조":{"leader":"melony.h","members":["melony.h","blue.kk"],"colIndex":2},"1조":{"leader":"max.0420","members":["max.0420","jacob.dh","james.42","charlie.yh","hiro.3","patrick.35","wendy.112","layla.1004","polar.09","hazel.j","jennifer.00","rhea.l","eden.m","mia.j"],"colIndex":3},"2조":{"leader":"liam.j","members":["liam.j","conrad.0126","joseph.13","dewey.064","kai.0725","teo.0615","lowell.0704","mari.gold","world.wide","kayla.k","kimi.03","deli.ce","mindy.b","amara.w"],"colIndex":4},"3조":{"leader":"ronnie.l","members":["ronnie.l","vibe.k","jude.0111","jurr.han","adrian.101","dane.0123","jiti.29"],"colIndex":5},"4조":{"leader":"dandel.m","members":["dandel.m","josh.r","nick.0212","noel.99","roy.0528","tony.ab","portia.k","cindy.416","elin.jh"],"colIndex":6},"5조":{"leader":"karen.b","members":["karen.b","peter.431","jane.1013","eloy.j","devin.nadas","poul.k","soul.k","soo.6705","yuli.s","ariel.0317","lily.5965","jini.y","yul.9"],"colIndex":7},"6조":{"leader":"tale.k","members":["tale.k","jena.11","jessie.cho","green.2","rose.es","kevin.s"],"colIndex":8},"7조":{"leader":"mir.20","members":["mir.20","sera.sz","jonadan.0703","antonio.72","arthur.h","silver.5311","moana.j","hans.k","lucas.m","alvin.s","cynthia.1225","damian.25"],"colIndex":9},"8조":{"leader":"chloe.36","members":["chloe.36","ethan.225","nunu.55","ebee.e","jake.219"],"colIndex":10},"9조":{"leader":"julian.link","members":["julian.link","aisha.14","molly.55","janice.08","alex.t","hubert.g","eddy.6","romeo.j","luke.j"],"colIndex":11},"10조":{"leader":"david.0726","members":["david.0726","anne.2","ruby.hy","anver.1130","bob.0903","alexander.p","austin.k"],"colIndex":12},"11조":{"leader":"leo.215","members":["leo.215","miffy.7498","chelsea.0708","juliet.kim","emily.6819","bonita.0909","jason.99","ben.k","kyle.king","ian.0321","victor.p","julu.03"],"colIndex":13},"12조":{"leader":"lola.28","members":["lola.28","jenny.0310","floria.0623","lisa.h","sophy.9908","logan.8","lucky.8322","jackson.14","aron.4121","jb.hong","felix.7"],"colIndex":14},"13조":{"leader":"jamie.4321","members":["jamie.4321","charles.923","nicole.e","kaju.99","sara.c","connie.1120","eva.kim","lyndsey.r","marin.3","asellra.4802"],"colIndex":15},"14조":{"leader":"hayden.kk","members":["hayden.kk","sam.h","swan.s","smile.man","joy.0128","samuel.0614","river.42","tube.c","asher.2017","tori.15"],"colIndex":16},"15조":{"leader":"bella.s","members":["bella.s","hugh.0427","michaela.s","hugo.h","naomi.0218","nova.j","mila.im","bean.3546","stella.l","emma.1","miles.26"],"colIndex":17},"에어서울(성수)":{"leader":"kate.yj","members":["kate.yj","milo.99","lucia.525","dido.2580","erika.1107","lani.on","lina.7513","andy.y","chris.h","annie.0415","cathy.y","gon.k","happy.00","winter.1","riel.p","cherry.ho","danial.h","heather.seo","limu.9287"],"colIndex":18},"에어서울(판교)":{"leader":"ria.21","members":["ria.21","jerry.sy","daisy.0420","mello.12","finn.0727","noah.k","rivo.l","bri.22","selene.l","el.y","sandy.33","yoni.k","jasmine.m","jemma.k","ari.901","elio.93","crystal.xu"],"colIndex":19}}}')
+;
+
+// ── 4. 조 명단 확인 뷰 ─────────────────────────────────────
+
+const SPOTS_CONFIG = [
+  { key: '김포공항',          day: 1, emoji: '✈️',  label: '김포공항' },
+  { key: '제주공항',          day: 1, emoji: '🛬',  label: '제주공항' },
+  { key: '카카오',            day: 1, emoji: '🏢',  label: '카카오 스페이스' },
+  { key: '난타공연장',        day: 1, emoji: '🥁',  label: '난타공연' },
+  { key: '포도원',            day: 1, emoji: '🍖',  label: '포도원 저녁' },
+  { key: '체크인',            day: 1, emoji: '🏨',  label: '숙소 체크인' },
+  { key: '하효마을',          day: 2, emoji: '🌺',  label: '하효마을' },
+  { key: '더클리프',          day: 2, emoji: '🌊',  label: '더클리프' },
+  { key: '메인행사',          day: 2, emoji: '🎉',  label: '메인행사' },
+  { key: '치유의숲',          day: 3, emoji: '🌲',  label: '치유의숲' },
+  { key: '고등어쌈밥',        day: 3, emoji: '🐟',  label: '고등어쌈밥' },
+  { key: '제주공항+김포공항', day: 3, emoji: '🛫',  label: '제주→김포' },
+];
+
+let attViewMode  = false;
+let attDay       = null; // 1 | 2 | 3
+let attSpot      = null; // spot key
+let attGroup     = null; // 조 이름
+let attChecks    = {};   // { spotKey: { groupName: { ldap: 'present'|'absent' } } }
+
+(function loadAttChecks() {
+  try { attChecks = JSON.parse(localStorage.getItem('attChecks') || '{}'); } catch(e) { attChecks = {}; }
+})();
+
+function saveAttChecks() {
+  localStorage.setItem('attChecks', JSON.stringify(attChecks));
+}
+
+/* ─ 그룹 목록 반환 (ROSTER_DATA 기반) ─ */
+function getGroupsForSpot(spotKey) {
+  const spotData = ROSTER_DATA[spotKey];
+  if (!spotData) return {};
+  const groups = {};
+  Object.entries(spotData)
+    .sort((a, b) => a[1].colIndex - b[1].colIndex)
+    .forEach(([groupName, gData]) => {
+      groups[groupName] = gData.members.map(ldap =>
+        PEOPLE.find(p => p.ldap === ldap) || { ldap, nickname: '', name: '', group: groupName }
+      );
+    });
+  return groups;
+}
+
+/* ─ 조장 LDAP ─ */
+function getLeaderLdap(spotKey, groupName) {
+  return ROSTER_DATA[spotKey]?.[groupName]?.leader || null;
+}
+
+function getCheckStatus(spotKey, group, ldap) {
+  return attChecks[spotKey]?.[group]?.[ldap] || 'unchecked';
+}
+
+/* ─ 뷰 토글 ─ */
+function toggleAttView() {
+  attViewMode = !attViewMode;
+  const attView  = document.getElementById('attendanceView');
+  const mainView = document.getElementById('mainView');
+  const btn      = document.getElementById('teamBtn');
+
+  if (attViewMode) {
+    mainView.style.display = 'none';
+    attView.style.display  = '';
+    btn.textContent = '🔍 내 정보';
+    btn.setAttribute('aria-label', '내 정보 조회로 돌아가기');
+    attDay = null; attSpot = null; attGroup = null;
+    renderAttView();
+  } else {
+    attView.style.display  = 'none';
+    mainView.style.display = '';
+    btn.textContent = '👥 조 명단 확인';
+    btn.setAttribute('aria-label', '조 명단 확인');
+  }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ─ Depth 1/2/3 렌더 ─ */
+function renderAttView() {
+  const el = document.getElementById('attContent');
+
+  /* Depth 1 — 일차 선택 */
+  if (!attDay) {
+    el.innerHTML = `
+      <div class="att-section-title">일차를 선택하세요</div>
+      <div class="att-day-grid">
+        ${[1,2,3].map(d => {
+          const emojis = ['🌅','🌞','🌆'];
+          const dates  = ['4/23 (목)','4/24 (금)','4/25 (토)'];
+          return `<button class="att-day-btn" onclick="setAttDay(${d})" aria-label="${d}일차 선택">
+            <span class="day-emoji">${emojis[d-1]}</span>
+            <span class="day-num">${d}일차</span>
+            <span class="day-date">${dates[d-1]}</span>
+          </button>`;
+        }).join('')}
+      </div>`;
+    return;
+  }
+
+  /* Depth 2 — 스팟 선택 */
+  if (!attSpot) {
+    const daySpots = SPOTS_CONFIG.filter(s => s.day === attDay);
+    el.innerHTML = `
+      ${breadcrumb([
+        { label: '일차', onclick: 'setAttDay(null)' },
+        { label: `${attDay}일차`, current: true }
+      ])}
+      <div class="att-section-title">${attDay}일차 스팟을 선택하세요</div>
+      <div class="att-spot-grid">
+        ${daySpots.map(s => `
+          <button class="att-spot-btn" onclick="setAttSpot('${s.key}')" aria-label="${s.label} 선택">
+            <div class="spot-emoji">${s.emoji}</div>
+            <div class="spot-label">${s.label}</div>
+          </button>`).join('')}
+      </div>`;
+    return;
+  }
+
+  /* Depth 3 — 조 선택 */
+  renderAttGroupView();
+}
+
+function renderAttGroupView() {
+  const el       = document.getElementById('attContent');
+  const spotInfo = SPOTS_CONFIG.find(s => s.key === attSpot);
+  const groups   = getGroupsForSpot(attSpot);
+
+  // 고정 레이아웃: 숫자조 4개씩, 마지막 줄 칸조·멜로니조·선발대
+  const FIXED_ROWS = [
+    ['1조','2조','3조','4조'],
+    ['5조','6조','7조','8조'],
+    ['9조','10조','11조','12조'],
+    ['13조','14조','15조'],
+    ['칸조','멜로니조','선발대'],
+  ];
+  const fixedAll = FIXED_ROWS.flat();
+  // 고정 레이아웃에 없는 나머지 조 (제주항공1·티웨이·AI+플랫폼 등)
+  const extraKeys = Object.keys(groups).filter(g => !fixedAll.includes(g));
+
+  function groupBtn(g) {
+    const members = groups[g];
+    if (!members || members.length === 0) return '';
+    const present = members.filter(p => getCheckStatus(attSpot, g, p.ldap) === 'present').length;
+    const allDone = present === members.length;
+    return `<button class="att-group-btn${allDone ? ' done' : ''}"
+      onclick="setAttGroup('${g.replace(/'/g, "\\'")}')"
+      aria-label="${g}, ${members.length}명">
+      ${g}
+      <span class="att-group-count">${present}/${members.length}명</span>
+    </button>`;
+  }
+
+  const fixedHTML = FIXED_ROWS.map(row => {
+    const btns = row.map(g => groupBtn(g)).filter(Boolean);
+    if (!btns.length) return '';
+    return `<div class="att-group-row">${btns.join('')}</div>`;
+  }).join('');
+
+  const extraHTML = extraKeys.length
+    ? `<div class="att-group-row">${extraKeys.map(g => groupBtn(g)).filter(Boolean).join('')}</div>`
+    : '';
+
+  el.innerHTML = `
+    ${breadcrumb([
+      { label: '일차',  onclick: 'setAttDay(null)' },
+      { label: `${attDay}일차`, onclick: `setAttDay(${attDay})` },
+      { label: `${spotInfo.emoji} ${spotInfo.label}`, current: true }
+    ])}
+    <div class="att-section-title">조를 선택하세요</div>
+    <div class="att-group-layout">
+      ${fixedHTML}
+      ${extraHTML}
+    </div>`;
+}
+
+/* ─ 상태 변경 헬퍼 ─ */
+function setAttDay(d) {
+  attDay = d; attSpot = null; attGroup = null;
+  renderAttView();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function setAttSpot(key) {
+  attSpot = key; attGroup = null;
+  renderAttView();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function setAttGroup(g) {
+  attGroup = g;
+  if (g === null) renderAttGroupView();
+  else renderAttChecklist();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ─ Depth 4 — 조원 목록 ─ */
+function renderAttChecklist() {
+  const el         = document.getElementById('attContent');
+  const spotInfo   = SPOTS_CONFIG.find(s => s.key === attSpot);
+  const groups     = getGroupsForSpot(attSpot);
+  const members    = groups[attGroup] || [];
+  const spotKey    = attSpot;
+  const groupName  = attGroup;
+  const leaderLdap = getLeaderLdap(spotKey, groupName);
+
+  const presentCnt = members.filter(p => getCheckStatus(spotKey, groupName, p.ldap) === 'present').length;
+  const absentCnt  = members.filter(p => getCheckStatus(spotKey, groupName, p.ldap) === 'absent').length;
+
+  const items = members.map(p => {
+    const st          = getCheckStatus(spotKey, groupName, p.ldap);
+    const icon        = st === 'present' ? '✓' : st === 'absent' ? '✗' : '○';
+    const cls         = st === 'present' ? 'present' : st === 'absent' ? 'absent' : '';
+    const isLeader    = leaderLdap && p.ldap === leaderLdap;
+    const statusLabel = st === 'present' ? '출석' : st === 'absent' ? '결석' : '미확인';
+    const displayName = p.nickname || p.name || p.ldap;
+    const subName     = (p.name && p.name !== p.nickname && p.name !== 'None') ? ` · ${p.name}` : '';
+    const leaderBadge = isLeader ? '<span class="att-leader-badge" aria-label="조장">조장</span>' : '';
+    return `<button class="att-member-item" data-ldap="${p.ldap}"
+        onclick="toggleCheck('${spotKey}','${groupName.replace(/'/g, "\\'")}','${p.ldap}')"
+        aria-label="${displayName}${isLeader ? ' (조장)' : ''} 출석 상태 ${statusLabel}, 클릭하여 변경">
+      <div class="att-check-icon ${cls}" aria-hidden="true">${icon}</div>
+      <div class="att-member-info">
+        <div class="att-member-name">${displayName}${leaderBadge}</div>
+        <div class="att-member-ldap">${p.ldap}${subName}</div>
+      </div>
+    </button>`;
+  }).join('');
+
+  el.innerHTML = `
+    ${breadcrumb([
+      { label: '일차',  onclick: 'setAttDay(null)' },
+      { label: `${attDay}일차`, onclick: `setAttDay(${attDay})` },
+      { label: `${spotInfo.emoji} ${spotInfo.label}`, onclick: 'setAttGroup(null)' },
+      { label: groupName, current: true }
+    ])}
+    <div class="att-header">
+      <div class="att-title">${groupName}
+        <span class="att-count" id="attCountBadge">${presentCnt}/${members.length}</span>
+      </div>
+      <div class="att-subtitle">${spotInfo.emoji} ${spotInfo.label} · ${attDay}일차
+        ${absentCnt > 0 ? `&nbsp;<span style="color:#ef4444;font-weight:600">${absentCnt}명 결석</span>` : ''}
+      </div>
+    </div>
+    <div class="att-list">
+      ${items || '<div class="no-result" style="padding:24px 0">이 스팟에 해당 조 인원이 없습니다.</div>'}
+    </div>
+    <div class="att-actions">
+      <button class="att-all-btn" onclick="markAllPresent()" aria-label="전원 출석 처리">✅ 전원 출석</button>
+    </div>`;
+}
+
+/* ─ 토글 (3-state: ○ → ✓ → ✗ → ○) ─ */
+function toggleCheck(spotKey, groupName, ldap) {
+  if (!attChecks[spotKey]) attChecks[spotKey] = {};
+  if (!attChecks[spotKey][groupName]) attChecks[spotKey][groupName] = {};
+  const cur  = attChecks[spotKey][groupName][ldap] || 'unchecked';
+  const next = cur === 'unchecked' ? 'present' : cur === 'present' ? 'absent' : 'unchecked';
+
+  if (next === 'unchecked') delete attChecks[spotKey][groupName][ldap];
+  else attChecks[spotKey][groupName][ldap] = next;
+  saveAttChecks();
+
+  const item = document.querySelector(`[data-ldap="${ldap}"]`);
+  if (item) {
+    const icon = item.querySelector('.att-check-icon');
+    icon.className   = 'att-check-icon' + (next === 'present' ? ' present' : next === 'absent' ? ' absent' : '');
+    icon.textContent = next === 'present' ? '✓' : next === 'absent' ? '✗' : '○';
+    const statusLabel = next === 'present' ? '출석' : next === 'absent' ? '결석' : '미확인';
+    const dispName = item.querySelector('.att-member-name')?.textContent || ldap;
+    item.setAttribute('aria-label', `${dispName} 출석 상태 ${statusLabel}, 클릭하여 변경`);
+  }
+
+  const members    = getGroupsForSpot(spotKey)[groupName] || [];
+  const presentCnt = members.filter(p => getCheckStatus(spotKey, groupName, p.ldap) === 'present').length;
+  const badge = document.getElementById('attCountBadge');
+  if (badge) badge.textContent = `${presentCnt}/${members.length}`;
+}
+
+function markAllPresent() {
+  const members = getGroupsForSpot(attSpot)[attGroup] || [];
+  if (!attChecks[attSpot]) attChecks[attSpot] = {};
+  if (!attChecks[attSpot][attGroup]) attChecks[attSpot][attGroup] = {};
+  members.forEach(p => { attChecks[attSpot][attGroup][p.ldap] = 'present'; });
+  saveAttChecks();
+  renderAttChecklist();
+}
+
+/* ─ PIN — 세션 캐시 (탭 닫기 전까지 유효) ─ */
+
+/* ─ 브레드크럼 헬퍼 ─ */
+function breadcrumb(items) {
+  const parts = items.map(it => {
+    if (it.current) return `<span class="att-crumb-current">${it.label}</span>`;
+    return `<button class="att-crumb-btn" onclick="${it.onclick};window.scrollTo({top:0,behavior:'smooth'})">${it.label}</button>`;
+  });
+  return `<div class="att-breadcrumb">${parts.reduce((acc, p, i) => acc + (i > 0 ? '<span class="att-crumb-sep">›</span>' : '') + p, '')}</div>`;
+}
 
 </script>
 </body>
